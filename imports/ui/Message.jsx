@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
+import {parseMarkdown} from 'meteor/themeteorchef:commonmark';
 
 import {Messages} from '../api/messages.js';
 
@@ -20,23 +21,28 @@ export default class Message extends Component {
     const messageClassName = this.props.message.checked ? 'checked' : '';
 
     return (
-      <li className={messageClassName}>
-        <button className="delete" onClick={this.deleteThisMessage.bind(this)}>
-          &times;
-        </button>
-
-        {/*<input
-          type="checkbox"
-          readOnly
-          checked={this.props.message.checked}
-          onClick={this.toggleChecked.bind(this)}
-        />*/}
-
-        <span className="text">
-         <strong>{this.props.message.username}</strong>: {this.props.message.text}
-       </span>
-      </li>
+            <div className="comment">
+                <a className="avatar">
+                  <img src="http://semantic-ui.com/images/avatar/small/joe.jpg"/>
+                </a>
+                <div className="content">
+                  <a className="author">{this.props.message.username}</a>
+                  <div className="metadata">
+                    <span className="date">Today at 5:42PM</span>
+                  </div>
+                  <div className="text markdown-content" dangerouslySetInnerHTML={ this.getHtmlContent( this.props.message.text ) } />
+                  <div className="actions">
+                    <a className="delete" onClick={this.deleteThisMessage.bind(this)}>Delete</a>                    
+                  </div>
+                </div>
+      </div>
     );
+  }
+
+  getHtmlContent(content) {
+      if ( content ) {
+          return { __html: parseMarkdown(content) };
+      }
   }
 
 }

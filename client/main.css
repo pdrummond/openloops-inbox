@@ -80,35 +80,35 @@ ul {
   position: relative;
 }
 
-li {
+.subject-list li {
   position: relative;
   list-style: none;
   padding: 15px;
   border-bottom: #eee solid 1px;
 }
 
-li a {
+.subject-list li a {
     color: #6F6F6F;
     text-decoration: none;
 }
 
-li a:hover {
+.subject-list li a:hover {
     color: black;
 }
 
-li .text {
+.subject-list li .text {
   margin-left: 10px;
 }
 
-li.checked {
+.subject-list li.checked {
   color: #888;
 }
 
-li.checked .text {
+.subject-list li.checked .text {
   text-decoration: line-through;
 }
 
-li.private {
+.subject-list li.private {
   background: #eee;
   border-color: #ddd;
 }
@@ -197,4 +197,10 @@ header .hide-completed {
     margin-bottom:5px;
     width:100%;
     outline:none;
+}
+
+.message-list {
+    height:calc(100% - 75px);
+    overflow:hidden;
+
 }

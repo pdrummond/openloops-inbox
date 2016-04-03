@@ -34,7 +34,7 @@ class MessageList extends Component {
             return <p>Loading...</p>;
         } else {
             return (
-                <div className="container">
+                <div className="container message-list">
                 <header>
                     <h1>{this.props.currentSubject.text} ({this.props.incompleteCount})</h1>
                     <label className="hide-completed">
@@ -56,9 +56,11 @@ class MessageList extends Component {
                         placeholder="Type to add new messages"/>
                     </form> : '' }
                 </header>
-                <ul>
-                {this.renderMessages()}
+                <div className="ui segment" style={{margin:'50px', overflow: 'auto', height: 'calc(100% - 200px)'}}>
+                <ul className="ui minimal comments">
+                    {this.renderMessages()}
                 </ul>
+                </div>
                 </div>
             );
         }
