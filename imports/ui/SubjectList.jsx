@@ -29,34 +29,38 @@ class SubjectList extends Component {
     }
 
     render() {
-        return (
-            <div className="container">
-            <header>
-                <h1>Welcome to OpenLoops ({this.props.incompleteCount})</h1>
-                <label className="hide-completed">
-                    <input
-                    type="checkbox"
-                    readOnly
-                    checked={this.state.hideCompleted}
-                    onClick={this.toggleHideCompleted.bind(this)}
-                    />
-                Hide Closed Subjects
-            </label>
-                <AccountsUIWrapper />
+        if(this.props.loading) {
+            return <p>Loading...</p>;
+        } else {
+            return (
+                <div className="container">
+                <header>
+                    <h1>Welcome to OpenLoops ({this.props.incompleteCount})</h1>
+                    <label className="hide-completed">
+                        <input
+                        type="checkbox"
+                        readOnly
+                        checked={this.state.hideCompleted}
+                        onClick={this.toggleHideCompleted.bind(this)}
+                        />
+                    Hide Closed Subjects
+                </label>
+                    <AccountsUIWrapper />
 
-                { this.props.currentUser ?
-                <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                <input
-                    type="text"
-                    ref="textInput"
-                    placeholder="Type to add new subjects"/>
-                </form> : '' }
-            </header>
-            <ul>
-            {this.renderSubjects()}
-            </ul>
-            </div>
-        );
+                    { this.props.currentUser ?
+                    <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+                    <input
+                        type="text"
+                        ref="textInput"
+                        placeholder="Type to add new subjects"/>
+                    </form> : '' }
+                </header>
+                <ul>
+                {this.renderSubjects()}
+                </ul>
+                </div>
+            );
+        }
     }
 
     handleSubmit(event) {
@@ -82,8 +86,9 @@ SubjectList.propTypes = {
 };
 
 export default createContainer(() => {
-    Meteor.subscribe('subjects');
+    var subjectsHandle = Meteor.subscribe('subjects');
     return {
+        loading: !(subjectsHandle.ready()),
         subjects: Subjects.find({}, { sort: { createdAt: -1 } }).fetch(),
         incompleteCount: Subjects.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user()

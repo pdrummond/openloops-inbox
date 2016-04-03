@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Messages } from '../api/messages.js';
+import { Subjects } from '../api/subjects.js';
 
 import Message from './Message.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
@@ -29,34 +30,38 @@ class MessageList extends Component {
     }
 
     render() {
-        return (
-            <div className="container">
-            <header>
-                <h1>Subject One ({this.props.incompleteCount})</h1>
-                <label className="hide-completed">
-                    <input
-                    type="checkbox"
-                    readOnly
-                    checked={this.state.hideCompleted}
-                    onClick={this.toggleHideCompleted.bind(this)}
-                    />
-                    Hide Completed Tasks
-            </label>
-                <AccountsUIWrapper />
+        if(this.props.loading) {
+            return <p>Loading...</p>;
+        } else {
+            return (
+                <div className="container">
+                <header>
+                    <h1>{this.props.currentSubject.text} ({this.props.incompleteCount})</h1>
+                    <label className="hide-completed">
+                        <input
+                        type="checkbox"
+                        readOnly
+                        checked={this.state.hideCompleted}
+                        onClick={this.toggleHideCompleted.bind(this)}
+                        />
+                        Hide Completed Tasks
+                </label>
+                    <AccountsUIWrapper />
 
-                { this.props.currentUser ?
-                <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                <input
-                    type="text"
-                    ref="textInput"
-                    placeholder="Type to add new messages"/>
-                </form> : '' }
-            </header>
-            <ul>
-            {this.renderMessages()}
-            </ul>
-            </div>
-        );
+                    { this.props.currentUser ?
+                    <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+                    <input
+                        type="text"
+                        ref="textInput"
+                        placeholder="Type to add new messages"/>
+                    </form> : '' }
+                </header>
+                <ul>
+                {this.renderMessages()}
+                </ul>
+                </div>
+            );
+        }
     }
 
     handleSubmit(event) {
@@ -64,7 +69,7 @@ class MessageList extends Component {
 
         const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-        Meteor.call('messages.insert', text, this.props.subjectId);
+        Meteor.call('messages.insert', text, this.props.currentSubject._id);
 
         ReactDOM.findDOMNode(this.refs.textInput).value = '';
     }
@@ -83,11 +88,13 @@ MessageList.propTypes = {
 
 export default createContainer(() => {
     var subjectId = FlowRouter.getParam('subjectId');
-    Meteor.subscribe('messages', subjectId);
+    var messagesHandle = Meteor.subscribe('messages', subjectId);
+    var subjectHandle = Meteor.subscribe('currentSubject', subjectId);
     return {
-        messages: Messages.find({}, { sort: { createdAt: -1 } }).fetch(),
+        loading: !(messagesHandle.ready() && subjectHandle.ready()),
+        messages: Messages.find({}, { sort: { createdAt: 1 } }).fetch(),
         incompleteCount: Messages.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user(),
-        subjectId
+        currentSubject: Subjects.findOne(subjectId)
     };
 }, MessageList);

@@ -25,12 +25,12 @@ export default class Message extends Component {
           &times;
         </button>
 
-        <input
+        {/*<input
           type="checkbox"
           readOnly
           checked={this.props.message.checked}
           onClick={this.toggleChecked.bind(this)}
-        />
+        />*/}
 
         <span className="text">
          <strong>{this.props.message.username}</strong>: {this.props.message.text}

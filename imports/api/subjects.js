@@ -5,8 +5,12 @@ import { check } from 'meteor/check';
 export const Subjects = new Mongo.Collection('subjects');
 
 if (Meteor.isServer) {
-    Meteor.publish('subjects', function subjectsPublication() {
+    Meteor.publish('subjects', function() {
         return Subjects.find();
+    });
+
+    Meteor.publish('currentSubject', function(subjectId) {
+        return Subjects.find({_id: subjectId});
     });
 }
 
