@@ -55,30 +55,31 @@ export default class SubjectBox extends Component {
     }
 
     doCreateSubject() {
-        const messageText = this.state.content.trim();
         const subject = ReactDOM.findDOMNode(this.refs.subjectRef).value.trim();
-        if(messageText.length > 0 && subject.length > 0) {
+        if(subject.length > 0) {
             Meteor.call('subjects.insert', subject, function(err, subjectId) {
                 if(err) {
                     alert("Error adding subject: " + err.reason);
                 } else {
-                    this.doCreateMessage(messageText, subjectId);
+                    ReactDOM.findDOMNode(this.refs.subjectRef).value = '';
+                    ReactDOM.findDOMNode(this.refs.toRef).value = '';
+                    this.doCreateMessage(subjectId);
                 }
             }.bind(this));
         }
     }
 
-    doCreateMessage(messageText, subjectId) {
-        Meteor.call('messages.insert', messageText, subjectId, function(err) {
-            if(err) {
-                alert("Error adding message: " + err.reason);
-            } else {
-                ReactDOM.findDOMNode(this.refs.subjectRef).value = '';
-                ReactDOM.findDOMNode(this.refs.toRef).value = '';
-                this.setState({content: ''});
-            }
-        }.bind(this));
-
+    doCreateMessage(subjectId) {
+        const messageText = this.state.content.trim();
+        if(messageText.length > 0) {
+            Meteor.call('messages.insert', messageText, subjectId, function(err) {
+                if(err) {
+                    alert("Error adding message: " + err.reason);
+                } else {
+                    this.setState({content: ''});
+                }
+            }.bind(this));
+        }
     }
 
     onToggleZenModeClicked() {
