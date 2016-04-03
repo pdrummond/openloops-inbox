@@ -2,14 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
-
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Messages } from '../api/messages.js';
 
 import Message from './Message.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-// App component - represents the whole app
-class App extends Component {
+class MessageList extends Component {
 
     constructor(props) {
         super(props);
@@ -33,7 +32,7 @@ class App extends Component {
         return (
             <div className="container">
             <header>
-                <h1>Welcome to OpenLoops ({this.props.incompleteCount})</h1>
+                <h1>Subject One ({this.props.incompleteCount})</h1>
                 <label className="hide-completed">
                     <input
                     type="checkbox"
@@ -65,7 +64,7 @@ class App extends Component {
 
         const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-        Meteor.call('messages.insert', text);
+        Meteor.call('messages.insert', text, this.props.subjectId);
 
         ReactDOM.findDOMNode(this.refs.textInput).value = '';
     }
@@ -77,16 +76,18 @@ class App extends Component {
     }
 }
 
-App.propTypes = {
+MessageList.propTypes = {
     messages: PropTypes.array.isRequired,
     incompleteCount: PropTypes.number.isRequired,
 };
 
 export default createContainer(() => {
-    Meteor.subscribe('messages');
+    var subjectId = FlowRouter.getParam('subjectId');
+    Meteor.subscribe('messages', subjectId);
     return {
         messages: Messages.find({}, { sort: { createdAt: -1 } }).fetch(),
         incompleteCount: Messages.find({ checked: { $ne: true } }).count(),
-        currentUser: Meteor.user()
+        currentUser: Meteor.user(),
+        subjectId
     };
-}, App);
+}, MessageList);
