@@ -6,18 +6,22 @@ export default class SubjectBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            content: ''
+            content: '',
+            zenMode: false,
         };
+        console.log("ctor zenMode: " + this.state.zenMode);
     }
 
     render() {
+        console.log("render zenMode:" + this.state.zenMode);
         return (
-            <div className="message-box">
+            <div className="message-box" style={{top: (this.state.zenMode?'75px':'auto')}}>
                     <div style={{display:'flex', width:'100%'}}>
                         <input ref="subjectRef" autofocus="autofocus" placeholder="Subject" style={{marginRight:'10px'}}/>
                         <input ref="toRef" placeholder="To"/>
                     </div>
-                    <textarea onChange={this.onChange.bind(this)}
+                    <textarea style={{height: (this.state.zenMode?'calc(100% - 72px)':'150px')}}
+                              onChange={this.onChange.bind(this)}
                               onKeyDown={this.onKeyDown.bind(this)}
                               type="text"
                               name="message"
@@ -25,7 +29,10 @@ export default class SubjectBox extends Component {
                               value={this.state.content}
                               autofocus="autofocus"
                     />
-                <button style={{float:'right'}}className="ui button" onClick={this.onCreateSubjectClicked.bind(this)}>Create</button>
+                <div style={{float:'right'}}>
+                    <button className="ui icon button" onClick={this.onToggleZenModeClicked.bind(this)}><i className="maximize icon"></i></button>
+                    <button className="ui button" onClick={this.onCreateSubjectClicked.bind(this)}>Create</button>
+                </div>
             </div>
         );
     }
@@ -61,7 +68,7 @@ export default class SubjectBox extends Component {
         }
     }
 
-    doCreateMessage(messageText, subjectId) {        
+    doCreateMessage(messageText, subjectId) {
         Meteor.call('messages.insert', messageText, subjectId, function(err) {
             if(err) {
                 alert("Error adding message: " + err.reason);
@@ -72,5 +79,10 @@ export default class SubjectBox extends Component {
             }
         }.bind(this));
 
+    }
+
+    onToggleZenModeClicked() {
+        var zenMode = !this.state.zenMode;
+        this.setState({'zenMode': zenMode});
     }
 }
