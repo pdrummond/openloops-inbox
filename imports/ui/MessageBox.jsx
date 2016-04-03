@@ -8,12 +8,13 @@ export default class SubjectBox extends Component {
         this.state = {
             content: '',
             zenMode: false,
+            createOnEnter: false
         };
         console.log("ctor zenMode: " + this.state.zenMode);
     }
 
     render() {
-        console.log("render zenMode:" + this.state.zenMode);
+        console.log("render createOnEnter:" + this.state.createOnEnter);
         return (
             <div className="message-box" style={{top: (this.state.zenMode?'75px':'auto')}}>
                     <div style={{display:'flex', width:'100%'}}>
@@ -29,9 +30,18 @@ export default class SubjectBox extends Component {
                               value={this.state.content}
                               autofocus="autofocus"
                     />
-                <div style={{float:'right'}}>
-                    <button className="ui icon button" onClick={this.onToggleZenModeClicked.bind(this)}><i className="maximize icon"></i></button>
-                    <button className="ui button" onClick={this.onCreateSubjectClicked.bind(this)}>Create</button>
+                <div>
+                    <div className="ui toggle checkbox" style={{top:'8px'}}>
+                        <input
+                            type="checkbox"
+                            checked={this.state.createOnEnter}
+                            onClick={() => { this.setState({createOnEnter: !this.state.createOnEnter}) } }/>
+                        <label>Press ENTER to create</label>
+                    </div>
+                    <div style={{float:'right'}}>
+                        <button className="ui icon button" onClick={this.onToggleZenModeClicked.bind(this)}><i className="maximize icon"></i></button>
+                        <button className="ui button" onClick={this.onCreateSubjectClicked.bind(this)}>Create</button>
+                    </div>
                 </div>
             </div>
         );
@@ -45,8 +55,10 @@ export default class SubjectBox extends Component {
     }
 
     onKeyDown(event) {
-        if (event.keyCode === 13 && event.shiftKey == false) {
-            this.doCreateSubject();
+        if(this.state.createOnEnter) {
+            if (event.keyCode === 13 && event.shiftKey == false) {
+                this.doCreateSubject();
+            }
         }
     }
 
