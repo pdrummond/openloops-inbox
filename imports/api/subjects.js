@@ -24,7 +24,7 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
-        Subjects.insert({
+        return Subjects.insert({
             text,
             createdAt: new Date(),
             owner: Meteor.userId(),

@@ -6,7 +6,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Subjects } from '../api/subjects.js';
 
 import Subject from './Subject.jsx';
-import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+import MessageBox from './MessageBox.jsx';
 
 class SubjectList extends Component {
 
@@ -28,49 +28,47 @@ class SubjectList extends Component {
         ));
     }
 
+    componentDidUpdate() {
+        $('.ui.dropdown').dropdown('refresh');
+    }
+
+
     render() {
         if(this.props.loading) {
             return <p>Loading...</p>;
         } else {
             return (
-                <div className="container">
-                <header>
-                    <h1>Welcome to OpenLoops ({this.props.incompleteCount})</h1>
-                    <label className="hide-completed">
-                        <input
-                        type="checkbox"
-                        readOnly
-                        checked={this.state.hideCompleted}
-                        onClick={this.toggleHideCompleted.bind(this)}
-                        />
-                    Hide Closed Subjects
-                </label>
-                    <AccountsUIWrapper />
+                <div className="container subject-list-wrapper">
+                    <div>
+                        <header>
+                            <label className="hide-completed">
+                                <input
+                                type="checkbox"
+                                readOnly
+                                checked={this.state.hideCompleted}
+                                onClick={this.toggleHideCompleted.bind(this)}
+                                />
+                            Hide Closed Subjects
+                        </label>
 
-                    { this.props.currentUser ?
-                    <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                    <input
-                        type="text"
-                        ref="textInput"
-                        placeholder="Type to add new subjects"/>
-                    </form> : '' }
-                </header>
-                <ul>
-                {this.renderSubjects()}
-                </ul>
+
+                            {this.renderMessageBox()}
+                        </header>
+                    </div>
+                    <div className="subject-list ui segment">
+                        <ul>
+                        {this.renderSubjects()}
+                        </ul>
+                    </div>
                 </div>
             );
         }
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
-
-        const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
-
-        Meteor.call('subjects.insert', text);
-
-        ReactDOM.findDOMNode(this.refs.textInput).value = '';
+    renderMessageBox() {
+        if(this.props.currentUser) {
+            return <MessageBox />;
+        }
     }
 
     toggleHideCompleted() {
