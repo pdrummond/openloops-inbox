@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { Messages } from './messages';
 
 export const Subjects = new Mongo.Collection('subjects');
 
@@ -34,7 +35,7 @@ Meteor.methods({
 
     'subjects.remove'(subjectId) {
         check(subjectId, String);
-
+        Messages.remove({subjectId});
         Subjects.remove(subjectId);
     },
 
