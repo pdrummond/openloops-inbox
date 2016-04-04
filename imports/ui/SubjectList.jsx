@@ -8,6 +8,7 @@ import { Subjects } from '../api/subjects.js';
 
 import Subject from './Subject.jsx';
 import MessageBox from './MessageBox.jsx';
+import SubjectsSidebar from './SubjectsSidebar.jsx';
 
 class SubjectList extends Component {
 
@@ -33,42 +34,43 @@ class SubjectList extends Component {
         $('.ui.dropdown').dropdown('refresh');
     }
 
-
     render() {
         if(this.props.loading) {
-            return <p>Loading...</p>;
+            return (
+                <p>Loading...</p>
+            );
         } else {
             return (
                 <div className="container subject-list-wrapper">
+                    <SubjectsSidebar homeSection={this.props.homeSection} groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>
                     <div>
                         <header>
-                            <label className="hide-completed">
-                                <input
-                                type="checkbox"
-                                readOnly
-                                checked={this.state.hideCompleted}
-                                onClick={this.toggleHideCompleted.bind(this)}
-                                />
-                            Hide Closed Subjects
-                        </label>
-
-
-                            {this.renderMessageBox()}
+                            {this.renderHeader()}
                         </header>
                     </div>
                     <div className="item-list subject-list ui segment">
                         <ul>
-                        {this.renderSubjects()}
+                            {this.renderSubjects()}
                         </ul>
                     </div>
+                    {this.renderMessageBox()}
                 </div>
             );
         }
     }
 
+    renderHeader() {
+        switch(this.props.homeSection) {
+            case 'inbox': return (<h1><i className="ui inbox icon"></i> Inbox</h1>);
+            case 'closed': return (<h1><i className="ui check circle outline icon"></i> Closed</h1>);
+            case 'drafts': return (<h1><i className="ui edit icon"></i> Drafts</h1>);
+        }
+    }
+
     renderMessageBox() {
+        console.log("SubjectList: groupFilterId" + this.props.groupFilterId);
         if(this.props.currentUser) {
-            return <MessageBox groups={this.props.groups}/>;
+            return <MessageBox groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>;
         }
     }
 
@@ -85,6 +87,9 @@ SubjectList.propTypes = {
 };
 
 export default createContainer(() => {
+    const homeSection = FlowRouter.getParam('homeSection');
+    const groupFilterId = FlowRouter.getParam('groupFilterId');
+    console.log("groupFilterId: " + groupFilterId);
     var groupsHandle = Meteor.subscribe('groups');
     var subjectsHandleReady = false;
     if(Meteor.user()) {
@@ -93,11 +98,23 @@ export default createContainer(() => {
     } else {
         subjectsHandleReady = true;
     }
-    return {
+    var data = {
         loading: !(groupsHandle.ready() && subjectsHandleReady),
         groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
-        subjects: Subjects.find({}, { sort: { createdAt: -1 } }).fetch(),
         incompleteCount: Subjects.find({ checked: { $ne: true } }).count(),
-        currentUser: Meteor.user()
+        currentUser: Meteor.user(),
+        homeSection,
+        groupFilterId
     };
+    let selector = {};
+    switch(homeSection) {
+        case 'inbox': selector.checked = false; break;
+        case 'closed': selector.checked = true; break;
+    }
+    if(groupFilterId != null) {
+        selector.groupId = groupFilterId;
+    }
+    data.subjects = Subjects.find(selector, { sort: { createdAt: -1 } }).fetch();
+
+    return data;
 }, SubjectList);

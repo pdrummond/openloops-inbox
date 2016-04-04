@@ -46,7 +46,7 @@ export default class Subject extends Component {
       var group = Groups.findOne(this.props.subject.groupId);
       if(group != null) {
           var toLabel = group.type == 'group' ? group.domain + "/" + group.name : group.domain;
-          return <span style={{fontSize:'12px', marginLeft:'5px', color:'#FF9800'}}> from <strong>{this.props.subject.username}</strong> to <strong>{toLabel}</strong></span>;
+          return <span style={{fontSize:'12px', marginLeft:'5px', color:'#B0B0B0'}}> from <strong>{this.props.subject.username}</strong> to <strong>{toLabel}</strong></span>;
       }
   }
 

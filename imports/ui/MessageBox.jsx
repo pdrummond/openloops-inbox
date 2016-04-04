@@ -8,36 +8,59 @@ export default class SubjectBox extends Component {
         this.state = {
             content: '',
             zenMode: false,
-            createOnEnter: false
+            createOnEnter: false,
         };
         console.log("ctor zenMode: " + this.state.zenMode);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(this.props.groupFilterId != nextProps.groupFilterId) {
+            $(".to-dropdown").dropdown('set selected', nextProps.groupFilterId);
+        }
+        if(nextProps.groupFilterId == null) {
+            $(".to-dropdown").dropdown('clear');
+        }
+    }
+
+    componentDidMount() {
+        if(this.props.groupFilterId) {
+            $(".to-dropdown").dropdown('set selected', this.props.groupFilterId);
+        }
+    }
+
+    getToFieldClassName() {
+        let className = "to-dropdown ui fluid search selection dropdown";
+        if(this.props.groupFilterId != null) {
+            className += " disabled";
+        }
+        return className;
     }
 
     render() {
         console.log("render createOnEnter:" + this.state.createOnEnter);
         return (
             <div className="message-box" style={{top: (this.state.zenMode?'75px':'auto')}}>
-                    <div style={{display:'flex', width:'100%', padding:'10px 0px'}}>
-                        <input ref="subjectRef" autofocus="autofocus" placeholder="Subject" style={{marginRight:'10px', height:'38px'}}/>
+                <div style={{display:'flex', width:'100%', padding:'10px 0px'}}>
+                    <input ref="subjectRef" autofocus="autofocus" placeholder="Subject" style={{marginRight:'10px', height:'38px'}}/>
 
-                    <div className="to-dropdown ui fluid search selection dropdown" style={{height:'38px', backgroundColor:'whitesmoke', border:'none'}}>
-                          <input ref="groupRef" type="hidden"/>
-                          <i className="dropdown icon"></i>
-                          <div className="default text">To</div>
-                          <div className="menu">
-                              {this.renderToDropdownItems()}
-                            </div>
+                    <div className={this.getToFieldClassName()} style={{height:'38px', backgroundColor:'whitesmoke', border:'none'}}>
+                        <input ref="groupRef" type="hidden"/>
+                        <i className="dropdown icon"></i>
+                        <div className="default text">To</div>
+                        <div className="menu">
+                            {this.renderToDropdownItems()}
                         </div>
-
                     </div>
-                    <textarea style={{height: (this.state.zenMode?'calc(100% - 72px)':'150px')}}
-                              onChange={this.onChange.bind(this)}
-                              onKeyDown={this.onKeyDown.bind(this)}
-                              type="text"
-                              name="message"
-                              placeholder="Type here to add message..."
-                              value={this.state.content}
-                              autofocus="autofocus"
+
+                </div>
+                <textarea style={{height: (this.state.zenMode?'calc(100% - 104px)':'150px')}}
+                    onChange={this.onChange.bind(this)}
+                    onKeyDown={this.onKeyDown.bind(this)}
+                    type="text"
+                    name="message"
+                    placeholder="Type here to add message..."
+                    value={this.state.content}
+                    autofocus="autofocus"
                     />
                 <div>
                     <div className="ui toggle checkbox" style={{top:'8px'}}>
@@ -94,7 +117,6 @@ export default class SubjectBox extends Component {
                     alert("Error adding subject: " + err.reason);
                 } else {
                     ReactDOM.findDOMNode(this.refs.subjectRef).value = '';
-                    ReactDOM.findDOMNode(this.refs.groupRef).value = '';
                     this.doCreateMessage(subjectId);
                 }
             }.bind(this));

@@ -34,6 +34,7 @@ Meteor.methods({
         return Subjects.insert({
             text,
             groupId,
+            checked: false,
             createdAt: now,
             updatedAt: now,
             owner: Meteor.userId(),
