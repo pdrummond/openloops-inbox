@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-export default class MainLayout extends Component {
+export default class GroupLayout extends Component {
     constructor(props) {
         super(props);
     }
@@ -33,37 +33,8 @@ export default class MainLayout extends Component {
               </div>
             </div>
             </div>
-            <div className="ui vertical menu" style={{margin:'30px'}}>
-  <a className="teal item active">
-    Inbox
-    <div className="ui teal pointing left label">1</div>
-  </a>
-  <a className="item">
-    Closed
-    <div className="ui label">51</div>
-  </a>
-  <a className="item">
-    Drafts
-    <div className="ui label">1</div>
-  </a>
-  <div className="item">
-    <div className="ui transparent icon input">
-      <input type="text" placeholder="Search.."/>
-      <i className="search icon"></i>
-    </div>
-  </div>
-  <div className="item">
-   <div className="header">Favourite Groups</div>
-   <div className="menu">
-     <a className="item">OpenLoops</a>
-     <a className="item">Nissan / bs-web</a>
-     <a className="item">Nissan / CMP</a>
-   </div>
- </div>
-</div>
 
-
-        <div className="main-content">
+        <div className="main-content" style={{left:'10px'}}>
             {this.props.main()}
         </div>
 

@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 
+import { Groups } from '../api/groups.js';
 import { Subjects } from '../api/subjects.js';
 
 import Subject from './Subject.jsx';
@@ -55,7 +56,7 @@ class SubjectList extends Component {
                             {this.renderMessageBox()}
                         </header>
                     </div>
-                    <div className="subject-list ui segment">
+                    <div className="item-list subject-list ui segment">
                         <ul>
                         {this.renderSubjects()}
                         </ul>
@@ -67,7 +68,7 @@ class SubjectList extends Component {
 
     renderMessageBox() {
         if(this.props.currentUser) {
-            return <MessageBox />;
+            return <MessageBox groups={this.props.groups}/>;
         }
     }
 
@@ -84,9 +85,17 @@ SubjectList.propTypes = {
 };
 
 export default createContainer(() => {
-    var subjectsHandle = Meteor.subscribe('subjects');
+    var groupsHandle = Meteor.subscribe('groups');
+    var subjectsHandleReady = false;
+    if(Meteor.user()) {
+        var subjectsHandle = Meteor.subscribe('subjects', Meteor.user().username);
+        subjectsHandleReady = subjectsHandle.ready();
+    } else {
+        subjectsHandleReady = true;
+    }
     return {
-        loading: !(subjectsHandle.ready()),
+        loading: !(groupsHandle.ready() && subjectsHandleReady),
+        groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
         subjects: Subjects.find({}, { sort: { createdAt: -1 } }).fetch(),
         incompleteCount: Subjects.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user()

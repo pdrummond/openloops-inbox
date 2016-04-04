@@ -22,11 +22,12 @@ Meteor.methods({
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
-
+        const now = new Date();
         Messages.insert({
             text,
             subjectId,
-            createdAt: new Date(),
+            createdAt: now,
+            updatedAt: now,
             owner: Meteor.userId(),
             username: Meteor.user().username,
         });

@@ -1,13 +1,18 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+
 import { Messages } from './messages';
+import { GroupMembers } from './group-members';
 
 export const Subjects = new Mongo.Collection('subjects');
 
 if (Meteor.isServer) {
-    Meteor.publish('subjects', function() {
-        return Subjects.find();
+    Meteor.publish('subjects', function(username) {
+        const groupIds = GroupMembers.find({username}).map(function (member) {
+            return member.groupId;
+        });
+        return Subjects.find({$or: [{username}, {groupId: {$in: groupIds}}]});
     });
 
     Meteor.publish('currentSubject', function(subjectId) {
@@ -17,17 +22,20 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    'subjects.insert'(text) {
+    'subjects.insert'(text, groupId) {
         check(text, String);
+        check(groupId, String);
 
-        // Make sure the user is logged in before inserting a subject
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
 
+        const now = new Date();
         return Subjects.insert({
             text,
-            createdAt: new Date(),
+            groupId,
+            createdAt: now,
+            updatedAt: now,
             owner: Meteor.userId(),
             username: Meteor.user().username,
         });

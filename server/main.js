@@ -1,4 +1,6 @@
 import { Meteor } from 'meteor/meteor';
+import '../imports/api/groups.js';
+import '../imports/api/group-members.js';
 import '../imports/api/subjects.js';
 import '../imports/api/messages.js';
 

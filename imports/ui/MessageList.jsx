@@ -7,7 +7,7 @@ import { Messages } from '../api/messages.js';
 import { Subjects } from '../api/subjects.js';
 
 import Message from './Message.jsx';
-import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+
 
 class MessageList extends Component {
 
@@ -46,7 +46,6 @@ class MessageList extends Component {
                         />
                         Hide Completed Tasks
                 </label>
-                    <AccountsUIWrapper />
 
                     { this.props.currentUser ?
                     <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >

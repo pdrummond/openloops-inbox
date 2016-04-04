@@ -80,35 +80,45 @@ ul {
   position: relative;
 }
 
-.subject-list li {
+.item-list li {
   position: relative;
   list-style: none;
   padding: 15px;
   border-bottom: #eee solid 1px;
 }
 
-.subject-list li a {
+.item-list li a {
     color: #6F6F6F;
     text-decoration: none;
 }
 
-.subject-list li a:hover {
+.group-list li a {
+    color:#2196F3;
+}
+
+.group-list li a:hover {
+    color:#2196F3;
+    text-decoration:underline;;
+}
+
+
+.item-list li a:hover {
     color: black;
 }
 
-.subject-list li .text {
+.item-list li .text {
   margin-left: 10px;
 }
 
-.subject-list li.checked {
+.item-list li.checked {
   color: #888;
 }
 
-.subject-list li.checked .text {
+.item-list li.checked .text {
   text-decoration: line-through;
 }
 
-.subject-list li.private {
+.item-list li.private {
   background: #eee;
   border-color: #ddd;
 }
@@ -163,7 +173,7 @@ header .hide-completed {
 
 #react-root .main-content .subject-list {
     overflow: auto;
-    height: calc(100% - 320px);
+    height: calc(100% - 340px);
     padding: 5px;
 }
 
@@ -203,4 +213,8 @@ header .hide-completed {
     height:calc(100% - 75px);
     overflow:hidden;
 
+}
+
+#react-root .main-content .group-list li {
+    list-style-type:none;
 }

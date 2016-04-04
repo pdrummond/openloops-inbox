@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
 
 import {Subjects} from '../api/subjects.js';
+import {Groups} from '../api/groups.js';
 
 // Subject component - represents a single todo item
 export default class Subject extends Component {
@@ -35,9 +36,18 @@ export default class Subject extends Component {
 
         <a href={`/subject/${this.props.subject._id}`}><span className="text">
             <strong>{this.props.subject.text}</strong>
+        {this.renderToField()}
         </span></a>
      </li>
     );
+  }
+
+  renderToField() {
+      var group = Groups.findOne(this.props.subject.groupId);
+      if(group != null) {
+          var toLabel = group.type == 'group' ? group.domain + "/" + group.name : group.domain;
+          return <span style={{fontSize:'12px', marginLeft:'5px', color:'#FF9800'}}> from <strong>{this.props.subject.username}</strong> to <strong>{toLabel}</strong></span>;
+      }
   }
 
 }

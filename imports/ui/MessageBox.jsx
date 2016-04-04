@@ -17,9 +17,18 @@ export default class SubjectBox extends Component {
         console.log("render createOnEnter:" + this.state.createOnEnter);
         return (
             <div className="message-box" style={{top: (this.state.zenMode?'75px':'auto')}}>
-                    <div style={{display:'flex', width:'100%'}}>
-                        <input ref="subjectRef" autofocus="autofocus" placeholder="Subject" style={{marginRight:'10px'}}/>
-                        <input ref="toRef" placeholder="To"/>
+                    <div style={{display:'flex', width:'100%', padding:'10px 0px'}}>
+                        <input ref="subjectRef" autofocus="autofocus" placeholder="Subject" style={{marginRight:'10px', height:'38px'}}/>
+
+                    <div className="to-dropdown ui fluid search selection dropdown" style={{height:'38px', backgroundColor:'whitesmoke', border:'none'}}>
+                          <input ref="groupRef" type="hidden"/>
+                          <i className="dropdown icon"></i>
+                          <div className="default text">To</div>
+                          <div className="menu">
+                              {this.renderToDropdownItems()}
+                            </div>
+                        </div>
+
                     </div>
                     <textarea style={{height: (this.state.zenMode?'calc(100% - 72px)':'150px')}}
                               onChange={this.onChange.bind(this)}
@@ -47,6 +56,15 @@ export default class SubjectBox extends Component {
         );
     }
 
+    renderToDropdownItems() {
+        return this.props.groups.map((group) => (
+            <div key={group._id} className="item" data-value={group._id}>
+                <i className={group.type == 'group' ? 'block layout icon' : 'user icon'}></i>
+                {group.type == 'group' ? group.domain + "/" + group.name : group.domain}
+            </div>
+        ));
+    }
+
     onChange(event, value) {
         if (event.target.value !== "\n") {
             this.setState({content: event.target.value});
@@ -68,13 +86,15 @@ export default class SubjectBox extends Component {
 
     doCreateSubject() {
         const subject = ReactDOM.findDOMNode(this.refs.subjectRef).value.trim();
-        if(subject.length > 0) {
-            Meteor.call('subjects.insert', subject, function(err, subjectId) {
+        const groupId = ReactDOM.findDOMNode(this.refs.groupRef).value.trim();
+
+        if(subject.length > 0 && groupId.length > 0) {
+            Meteor.call('subjects.insert', subject, groupId, function(err, subjectId) {
                 if(err) {
                     alert("Error adding subject: " + err.reason);
                 } else {
                     ReactDOM.findDOMNode(this.refs.subjectRef).value = '';
-                    ReactDOM.findDOMNode(this.refs.toRef).value = '';
+                    ReactDOM.findDOMNode(this.refs.groupRef).value = '';
                     this.doCreateMessage(subjectId);
                 }
             }.bind(this));
