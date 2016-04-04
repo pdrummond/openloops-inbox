@@ -64,6 +64,14 @@ class SubjectList extends Component {
             case 'inbox': return (<h1><i className="ui inbox icon"></i> Inbox</h1>);
             case 'closed': return (<h1><i className="ui check circle outline icon"></i> Closed</h1>);
             case 'drafts': return (<h1><i className="ui edit icon"></i> Drafts</h1>);
+            case 'group': {
+                var group = Groups.findOne(this.props.groupFilterId);
+                if(group.type == 'group') {
+                    return (<h1><i className="ui block layout icon"></i> {group.domain} / {group.name} </h1>);
+                } else {
+                    return (<h1><i className="ui user icon"></i> {group.domain}</h1>);
+                }
+            }
         }
     }
 

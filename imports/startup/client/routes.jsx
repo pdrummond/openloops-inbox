@@ -17,10 +17,9 @@ FlowRouter.route('/home/:homeSection', {
     },
 });
 
-FlowRouter.route('/home/group/:groupFilterId', {
+FlowRouter.route('/home/:homeSection/:groupFilterId', {
     name: 'subjectList',
     action() {
-        FlowRouter.setParams({'homeSection': 'group'});
         mount(MainLayout, {
             main: () => <SubjectList/>
         });
