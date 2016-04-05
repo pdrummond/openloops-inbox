@@ -38,7 +38,7 @@ class MessageList extends Component {
             return (
                 <div className="container message-list" style={{marginLeft:'10px'}}>
                     <header>
-                        <h1 style={{fontSize:'30px'}}>
+                        <h1>
                             <i className="comments icon"></i> {this.props.currentSubject.text}
                         </h1>
                         <p >
@@ -49,7 +49,7 @@ class MessageList extends Component {
                     </header>
 
                     <div style={{marginTop:'20px', paddingRight:'350px', height:'100%'}}>
-                        <div className="ui segment" style={{overflow: 'auto', height: 'calc(100% - 360px)'}}>
+                        <div className="ui segment" style={{overflow: 'auto', height: 'calc(100% - 320px)'}}>
                             <ul className="ui feed">
                                 <div className="event">
                                     <div className="label">

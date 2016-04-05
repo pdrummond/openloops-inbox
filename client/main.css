@@ -28,8 +28,7 @@ body {
 }
 
 header {
-  background: whitesmoke;
-  padding: 20px 15px 15px 15px;
+  xbackground: whitesmoke;
   position: relative;
 }
 
@@ -152,7 +151,6 @@ header .hide-completed {
 }
 
 #react-root .main-content {
-    margin: 10px;
     position: absolute;
     left: 10px;
     top: 75px;
@@ -165,6 +163,7 @@ header .hide-completed {
     height:100%;
     overflow:hidden;
     padding-left:250px;
+    margin: 10px;
 }
 
 #login-dropdown-list {
@@ -174,7 +173,7 @@ header .hide-completed {
 
 #react-root .main-content .subject-list {
     overflow: auto;
-    height: calc(100% - 370px);
+    height: calc(100% - 340px);
     padding: 5px;
 }
 
@@ -193,8 +192,8 @@ header .hide-completed {
 }
 
 .message-list .message-box {
-    left: 30px;
-    width: calc(100% - 400px);
+    left: 20px;
+    width: calc(100% - 380px);
 }
 
 .message-box textarea {
@@ -230,9 +229,9 @@ header .hide-completed {
 
 .message-list .subject-right-sidebar {
     position: fixed;
-    right: 20px;
+    right: 10px;
     width: 320px;
-    top: 205px;
-    height: calc(100% - 240px);
+    top: 145px;
+    height: calc(100% - 180px);
     overflow:auto;
 }

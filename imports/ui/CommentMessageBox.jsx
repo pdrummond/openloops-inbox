@@ -14,7 +14,7 @@ export default class CommentMessageBox extends Component {
 
     render() {
         return (
-            <div className="message-box" style={{top: (this.state.zenMode?'165px':'auto'), width: (this.state.zenMode?'calc(100% - 40px)':'calc(100% - 400px)')}}>
+            <div className="message-box" style={{top: (this.state.zenMode?'160px':'auto'), width: (this.state.zenMode?'calc(100% - 30px)':'calc(100% - 380px)')}}>
                 <textarea style={{height: (this.state.zenMode?'calc(100% - 40px)':'150px')}}
                     onChange={this.onChange.bind(this)}
                     onKeyDown={this.onKeyDown.bind(this)}
