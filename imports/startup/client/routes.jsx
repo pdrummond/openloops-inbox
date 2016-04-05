@@ -4,6 +4,7 @@ import { mount } from 'react-mounter';
 
 import MainLayout from '../../ui/MainLayout.jsx';
 import GroupList from '../../ui/GroupList.jsx';
+import GroupGrid from '../../ui/GroupGrid.jsx';
 import GroupMemberList from '../../ui/GroupMemberList.jsx';
 import SubjectList from '../../ui/SubjectList.jsx';
 import MessageList from '../../ui/MessageList.jsx';
@@ -35,6 +36,16 @@ FlowRouter.route('/subject/:subjectId', {
         });
     },
 });
+
+FlowRouter.route('/explore', {
+    name: 'explore',
+    action() {
+        mount(MainLayout, {
+            main: () => <GroupGrid/>
+        });
+    },
+});
+
 
 FlowRouter.route('/groups', {
     name: 'groupList',
