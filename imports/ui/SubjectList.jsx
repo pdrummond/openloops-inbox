@@ -15,17 +15,11 @@ class SubjectList extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            hideCompleted: false,
-        };
+
     }
 
     renderSubjects() {
-        let filteredSubjects = this.props.subjects;
-        if (this.state.hideCompleted) {
-            filteredSubjects = filteredSubjects.filter(subject => !subject.checked);
-        }
-        return filteredSubjects.map((subject) => (
+        return this.props.subjects.map((subject) => (
             <Subject key={subject._id} subject={subject} />
         ));
     }
@@ -80,12 +74,6 @@ class SubjectList extends Component {
             return <MessageBox groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>;
         }
     }
-
-    toggleHideCompleted() {
-        this.setState({
-            hideCompleted: !this.state.hideCompleted,
-        });
-    }
 }
 
 SubjectList.propTypes = {
@@ -95,7 +83,7 @@ SubjectList.propTypes = {
 
 export default createContainer(() => {
     const homeSection = FlowRouter.getParam('homeSection');
-    const groupFilterId = FlowRouter.getParam('groupFilterId');    
+    const groupFilterId = FlowRouter.getParam('groupFilterId');
     var groupsHandle = Meteor.subscribe('groups');
     var subjectsHandleReady = false;
     if(Meteor.user()) {
@@ -114,8 +102,8 @@ export default createContainer(() => {
     };
     let selector = {};
     switch(homeSection) {
-        case 'inbox': selector.checked = false; break;
-        case 'closed': selector.checked = true; break;
+        case 'inbox': selector.status = 'open'; break;
+        case 'closed': selector.status = 'closed'; break;
     }
     if(groupFilterId != null) {
         selector.groupId = groupFilterId;

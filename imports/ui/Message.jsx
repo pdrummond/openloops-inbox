@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
 import {parseMarkdown} from 'meteor/themeteorchef:commonmark';
+import {moment} from 'meteor/momentjs:moment';
 
 import {Messages} from '../api/messages.js';
 
@@ -23,19 +24,15 @@ export default class Message extends Component {
         return (
             <div className="event">
                 <a className="label">
-                    <img src="http://semantic-ui.com/images/avatar/small/joe.jpg"/>
+                    <img src={this.getUserProfileImage()}/>
                 </a>
                 <div className="content">
                     <div className="summary">
                         {this.props.message.username}
-                        <span className="date">3 days ago</span>
+                        <span className="date">{moment(this.props.message.createdAt).fromNow()}</span>
                     </div>
                     <div className="extra text markdown-content" dangerouslySetInnerHTML={ this.getHtmlContent( this.props.message.text ) }>
                     </div>
-                    <div className="meta">
-                        <a className="delete" onClick={this.deleteThisMessage.bind(this)}>Delete</a>
-                        </div>
-
                     </div>
                 </div>
             );
@@ -47,6 +44,10 @@ export default class Message extends Component {
             }
         }
 
+        getUserProfileImage() {
+            var user = Meteor.users.findOne(this.props.message.owner);
+            return user.profileImage;
+        }
     }
 
     Message.propTypes = {

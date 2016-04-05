@@ -34,7 +34,7 @@ Meteor.methods({
         return Subjects.insert({
             text,
             groupId,
-            checked: false,
+            status: 'open',
             createdAt: now,
             updatedAt: now,
             owner: Meteor.userId(),
@@ -48,10 +48,10 @@ Meteor.methods({
         Subjects.remove(subjectId);
     },
 
-    'subjects.setChecked'(subjectId, setChecked) {
+    'subjects.updateStatus'(subjectId, status) {
         check(subjectId, String);
-        check(setChecked, Boolean);
+        check(status, String);
 
-        Subjects.update(subjectId, { $set: { checked: setChecked } });
+        Subjects.update(subjectId, { $set: { status } });
     }
 });

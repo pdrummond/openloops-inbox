@@ -4,6 +4,15 @@ import {Gravatar} from 'meteor/jparker:gravatar';
 import { Groups } from './groups.js';
 import { GroupMembers } from './group-members.js';
 
+if(Meteor.isServer) {
+    Meteor.publish("userData", function () {
+        return Meteor.users.find({}, {fields: {
+            "username": 1,
+            "profileImage": 1
+        }});
+    });
+}
+
 Accounts.onCreateUser(function(options, user) {
     console.log("onCreateUser: " + JSON.stringify(user, null, 2));
     var email;
