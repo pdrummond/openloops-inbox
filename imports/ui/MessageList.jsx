@@ -66,7 +66,7 @@ class MessageList extends Component {
                     </header>
 
                     <div style={{marginTop:'20px', paddingRight:'350px', height:'100%'}}>
-                        <div className="ui segment" style={{overflow: 'auto', height: 'calc(100% - 320px)'}}>
+                        <div ref="messageList" className="ui segment" style={{overflow: 'auto', height: 'calc(100% - 320px)'}}>
                             <ul className="ui feed">
                                 {/*}<div className="event">
                                 <div className="label">
@@ -233,18 +233,11 @@ class MessageList extends Component {
 
         renderMessageBox() {
             if(this.props.currentUser) {
-                return <CommentMessageBox currentSubject={this.props.currentSubject}/>;
+                return <CommentMessageBox
+                    onMessageCreated={this.scrollBottom.bind(this)}
+                    currentSubject={this.props.currentSubject}
+                    />;
             }
-        }
-
-        handleSubmit(event) {
-            event.preventDefault();
-
-            const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
-
-            Meteor.call('messages.insert', text, this.props.currentSubject._id);
-
-            ReactDOM.findDOMNode(this.refs.textInput).value = '';
         }
 
         renderToLabel() {
@@ -260,6 +253,17 @@ class MessageList extends Component {
             this.setState({
                 hideCompleted: !this.state.hideCompleted,
             });
+        }
+
+        scrollBottom(callback) {
+            var self = this;
+            setTimeout(function() {
+                let node = ReactDOM.findDOMNode(self.refs.messageList);
+                node.scrollTop = node.scrollHeight;
+                if(callback) {
+                    callback();
+                }
+            }, 20);
         }
     }
 

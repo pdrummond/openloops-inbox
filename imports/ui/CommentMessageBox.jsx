@@ -8,7 +8,7 @@ export default class CommentMessageBox extends Component {
         this.state = {
             content: '',
             zenMode: false,
-            createOnEnter: false,
+            createOnEnter: true,
         };
     }
 
@@ -68,6 +68,7 @@ export default class CommentMessageBox extends Component {
                     alert("Error adding message: " + err.reason);
                 } else {
                     this.setState({content: ''});
+                    this.props.onMessageCreated();
                 }
             }.bind(this));
         }
