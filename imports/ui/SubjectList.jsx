@@ -76,7 +76,6 @@ class SubjectList extends Component {
     }
 
     renderMessageBox() {
-        console.log("SubjectList: groupFilterId" + this.props.groupFilterId);
         if(this.props.currentUser) {
             return <MessageBox groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>;
         }
@@ -96,8 +95,7 @@ SubjectList.propTypes = {
 
 export default createContainer(() => {
     const homeSection = FlowRouter.getParam('homeSection');
-    const groupFilterId = FlowRouter.getParam('groupFilterId');
-    console.log("groupFilterId: " + groupFilterId);
+    const groupFilterId = FlowRouter.getParam('groupFilterId');    
     var groupsHandle = Meteor.subscribe('groups');
     var subjectsHandleReady = false;
     if(Meteor.user()) {

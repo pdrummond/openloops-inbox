@@ -3,9 +3,11 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { Messages } from '../api/messages.js';
+import { Groups } from '../api/groups.js';
 import { Subjects } from '../api/subjects.js';
+import { Messages } from '../api/messages.js';
 
+import CommentMessageBox from './CommentMessageBox.jsx';
 import Message from './Message.jsx';
 
 
@@ -31,71 +33,194 @@ class MessageList extends Component {
 
     render() {
         if(this.props.loading) {
-            return <p>Loading...</p>;
+            return (<p>Loading...</p>);
         } else {
             return (
-                <div className="container message-list">
-                <header>
-                    <h1>{this.props.currentSubject.text} ({this.props.incompleteCount})</h1>
-                    <label className="hide-completed">
-                        <input
-                        type="checkbox"
-                        readOnly
-                        checked={this.state.hideCompleted}
-                        onClick={this.toggleHideCompleted.bind(this)}
-                        />
-                        Hide Completed Tasks
-                </label>
+                <div className="container message-list" style={{marginLeft:'10px'}}>
+                    <header>
+                        <h1 style={{fontSize:'30px'}}>
+                            <i className="comments icon"></i> {this.props.currentSubject.text}
+                        </h1>
+                        <p >
+                            <button className="ui tiny green button">
+                                Open
+                            </button> <span style={{color:'gray'}}>Created by pdrummond 2 days ago</span>
+                        </p>
+                    </header>
 
-                    { this.props.currentUser ?
-                    <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                    <input
-                        type="text"
-                        ref="textInput"
-                        placeholder="Type to add new messages"/>
-                    </form> : '' }
-                </header>
-                <div className="ui segment" style={{margin:'50px', overflow: 'auto', height: 'calc(100% - 200px)'}}>
-                <ul className="ui minimal comments">
-                    {this.renderMessages()}
-                </ul>
-                </div>
-                </div>
-            );
+                    <div style={{marginTop:'20px', paddingRight:'350px', height:'100%'}}>
+                        <div className="ui segment" style={{overflow: 'auto', height: 'calc(100% - 360px)'}}>
+                            <ul className="ui feed">
+                                <div className="event">
+                                    <div className="label">
+                                        <img src="http://semantic-ui.com/images/avatar/small/elliot.jpg"/>
+                                    </div>
+                                    <div className="content">
+                                        <div className="summary">
+                                            <a className="user">
+                                                Harold Faker
+                                            </a> added label <a className="ui red label">can't-reproduce</a>
+                                            <div className="date">
+                                                1 Hour Ago
+                                            </div>
+                                        </div>
+                                        <div className="meta">
+                                            <a className="like">
+                                                <i className="like icon"></i> 4 Likes
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="event">
+                                        <div className="label">
+                                            <img src="http://semantic-ui.com/images/avatar/small/helen.jpg"/>
+                                        </div>
+                                        <div className="content">
+                                            <div className="summary">
+                                                <a>Helen Troy</a> added <a>2 new images</a>
+                                                <div className="date">
+                                                    4 days ago
+                                                </div>
+                                            </div>
+                                            <div className="extra images">
+                                                <a><img src="http://semantic-ui.com/images/wireframe/image.png"/></a>
+                                                <a><img src="http://semantic-ui.com/images/wireframe/image.png"/></a>
+                                            </div>
+                                            <div className="meta">
+                                                <a className="like">
+                                                    <i className="like icon"></i> 1 Like
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {this.renderMessages()}
+                                    </ul>
+                                    {this.renderMessageBox()}
+                                </div>
+                                <div className="subject-right-sidebar ui segment">
+                                    <h5 className="ui disabled header">
+                                        <span><i className="ui tag icon"></i> LABELS</span>
+                                    </h5>
+                                    <div className="ui segment">
+                                        <div className="ui divided selection list">
+                                            <a className="item">
+                                                <div className="ui red horizontal label">can't-reproduce</div>
+                                            </a>
+                                            <a className="item">
+                                                <div className="ui purple horizontal label">in-progress</div>
+                                            </a>
+                                            <a className="item">
+                                                <div className="ui red horizontal label">Important</div>
+                                            </a>
+                                            <a className="item">
+                                                <div className="ui teal horizontal label">Release v1</div>
+                                                Core functionality only
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <h5 className="ui disabled header">
+                                        <span><i className="ui user icon"></i> ASSIGNEE</span>
+                                    </h5>
+                                    <div className="ui card">
+                                        <div className="content">
+                                            <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar/small/elliot.jpg"/>
+                                            <div className="header">
+                                                Paul Drummond
+                                            </div>
+                                            <div className="meta">
+                                                Developer
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <h5 className="ui disabled header">
+                                        <span><i className="ui users icon"></i> PARTICIPANTS</span>
+                                    </h5>
+                                    <div className="ui vertical segment">
+                                        <div className="ui card">
+                                            <div className="content">
+                                                <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar/small/elliot.jpg"/>
+                                                <div className="content">
+                                                    <strong>Paul Drummond</strong>
+                                                </div>
+                                                <div className="meta">
+                                                    <i className="green circle icon"></i>
+                                                    Online, here
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="ui card">
+                                            <div className="content">
+                                                <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar/large/jenny.jpg"/>
+                                                <div className="content">
+                                                    <strong>Jenny Hess</strong>
+                                                </div>
+                                                <div className="meta">
+                                                    <i className="orange circle icon"></i>
+                                                    Online, elsewhere
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="ui card">
+                                            <div className="content">
+                                                <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar2/large/matthew.png"/>
+                                                <div className="content">
+                                                    <strong>Matt Giampietro</strong>
+                                                </div>
+                                                <div className="meta">
+                                                    <i className="red circle icon"></i>
+                                                    Offline
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+            }
+
+            renderMessageBox() {
+                if(this.props.currentUser) {
+                    return <CommentMessageBox currentSubject={this.props.currentSubject}/>;
+                }
+            }
+
+            handleSubmit(event) {
+                event.preventDefault();
+
+                const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+
+                Meteor.call('messages.insert', text, this.props.currentSubject._id);
+
+                ReactDOM.findDOMNode(this.refs.textInput).value = '';
+            }
+
+            toggleHideCompleted() {
+                this.setState({
+                    hideCompleted: !this.state.hideCompleted,
+                });
+            }
         }
-    }
 
-    handleSubmit(event) {
-        event.preventDefault();
+        MessageList.propTypes = {
+            messages: PropTypes.array.isRequired,
+            incompleteCount: PropTypes.number.isRequired,
+        };
 
-        const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
-
-        Meteor.call('messages.insert', text, this.props.currentSubject._id);
-
-        ReactDOM.findDOMNode(this.refs.textInput).value = '';
-    }
-
-    toggleHideCompleted() {
-        this.setState({
-            hideCompleted: !this.state.hideCompleted,
-        });
-    }
-}
-
-MessageList.propTypes = {
-    messages: PropTypes.array.isRequired,
-    incompleteCount: PropTypes.number.isRequired,
-};
-
-export default createContainer(() => {
-    var subjectId = FlowRouter.getParam('subjectId');
-    var messagesHandle = Meteor.subscribe('messages', subjectId);
-    var subjectHandle = Meteor.subscribe('currentSubject', subjectId);
-    return {
-        loading: !(messagesHandle.ready() && subjectHandle.ready()),
-        messages: Messages.find({}, { sort: { createdAt: 1 } }).fetch(),
-        incompleteCount: Messages.find({ checked: { $ne: true } }).count(),
-        currentUser: Meteor.user(),
-        currentSubject: Subjects.findOne(subjectId)
-    };
-}, MessageList);
+        export default createContainer(() => {
+            var subjectId = FlowRouter.getParam('subjectId');
+            var messagesHandle = Meteor.subscribe('messages', subjectId);
+            var subjectHandle = Meteor.subscribe('currentSubject', subjectId);
+            return {
+                loading: !(messagesHandle.ready() && subjectHandle.ready()),
+                groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
+                messages: Messages.find({}, { sort: { createdAt: 1 } }).fetch(),
+                incompleteCount: Messages.find({ checked: { $ne: true } }).count(),
+                currentUser: Meteor.user(),
+                currentSubject: Subjects.findOne(subjectId)
+            };
+        }, MessageList);

@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import ReactDOM from 'react-dom';
 import React, { Component, PropTypes } from 'react';
 
-export default class SubjectBox extends Component {
+export default class MessageBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
