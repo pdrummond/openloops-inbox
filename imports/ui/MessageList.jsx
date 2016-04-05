@@ -31,6 +31,13 @@ class MessageList extends Component {
 
             }
         });
+        $('.type-dropdown').dropdown('set selected', self.props.currentSubject.type);
+        $('.type-dropdown').dropdown({
+            onChange: (type) => {
+                Meteor.call('subjects.updateType', self.props.currentSubject._id, type);
+
+            }
+        });
     }
 
     renderMessages() {
@@ -51,7 +58,7 @@ class MessageList extends Component {
                 <div className="container message-list" style={{marginLeft:'10px'}}>
                     <header>
                         <h1>
-                            <i className="comments icon"></i> {this.props.currentSubject.text}
+                            <i className={Subjects.helpers.getSubjectTypeIconClassName(this.props.currentSubject.type)}></i> {this.props.currentSubject.text}
                             </h1>
                             <p >
                                 {this.renderStatusButton()} <span style={{color:'gray'}}>From <strong>{this.props.currentSubject.username}</strong> to <strong>{this.renderToLabel()}</strong> {moment(this.props.currentSubject.createdAt).fromNow()}</span>
@@ -152,6 +159,7 @@ class MessageList extends Component {
                                     <option value="question">Question</option>
                                     <option value="idea">Idea</option>
                                     <option value="issue">Issue</option>
+                                    <option value="announcement">Announcement</option>
                                 </select>
 
                                 <h5 className="ui disabled header">

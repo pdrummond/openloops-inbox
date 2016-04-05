@@ -30,7 +30,7 @@ export default class Subject extends Component {
                     checked={this.props.subject.status == 'closed'}
                     onClick={this.toggleChecked.bind(this)}
                     />
-                <i className="comments icon" style={{marginLeft:'10px', color:'#5FA4A6'}}></i>
+                <i className={Subjects.helpers.getSubjectTypeIconClassName(this.props.subject.type)} style={{marginLeft:'20px', color:'gray', fontSize:'16px'}}></i>
 
                 <a href={`/subject/${this.props.subject._id}`}><span className="text">
                     <strong>{this.props.subject.text}</strong>

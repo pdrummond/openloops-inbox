@@ -22,9 +22,10 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    'subjects.insert'(text, groupId) {
+    'subjects.insert'(text, groupId, subjectType) {
         check(text, String);
         check(groupId, String);
+        check(subjectType, String);
 
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
@@ -34,6 +35,7 @@ Meteor.methods({
         return Subjects.insert({
             text,
             groupId,
+            type: subjectType || 'discussion',
             status: 'open',
             createdAt: now,
             updatedAt: now,
@@ -53,5 +55,29 @@ Meteor.methods({
         check(status, String);
 
         Subjects.update(subjectId, { $set: { status } });
+    },
+
+    'subjects.updateType'(subjectId, type) {
+        check(subjectId, String);
+        check(type, String);
+
+        Subjects.update(subjectId, { $set: { type } });
     }
 });
+
+Subjects.helpers = {
+    getSubjectTypeIconClassName(type) {
+        var typeClassName = 'discussion';
+        switch(type) {
+            case 'discussion': typeClassName = 'comments'; break;
+            case 'task': typeClassName = 'warning circle'; break;
+            case 'question': typeClassName = 'help circle'; break;
+            case 'idea': typeClassName = 'lightning'; break;
+            case 'issue': typeClassName = 'bug'; break;
+            case 'announcement': typeClassName = 'announcement'; break;
+            case 'journal': typeClassName = 'book'; break;
+            case 'story': typeClassName = 'newspaper'; break;
+        }
+        return "icon " + typeClassName;
+    }
+}

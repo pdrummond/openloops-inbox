@@ -14,25 +14,25 @@ export default class SubjectsSidebar extends Component {
 
     render() {
         return (
-            <div className="ui vertical menu" style={{position:'fixed', left:'10px', top: '55px', margin:'30px 10px'}}>
+            <div className="ui vertical menu" style={{position:'fixed', width: '235px', left:'10px', top: '55px', margin:'30px 10px', height:'calc(100% - 105px)'}}>
                 <a href="/home/inbox" className={this.props.homeSection=='inbox' ? "teal item active" : "teal item"}>
                     Inbox
                     {/*<div className="ui teal pointing left label">1</div>*/}
                 </a>
                 <a href="/home/closed"  className={this.props.homeSection=='closed' ? "teal item active" : "teal item"}>
                     Closed
-                    {/*}<div className="ui label">1</div>*/}
+                    {/*<div className="ui label">1</div>*/}
                 </a>
-                <a href="/home/drafts"  className={this.props.homeSection=='drafts' ? "teal item active" : "teal item"}>
+                {/*<a href="/home/drafts"  className={this.props.homeSection=='drafts' ? "teal item active" : "teal item"}>
                     Drafts
-                    {/*}<div className="ui label">1</div>*/}
-                </a>
-                <div className="item">
+                    <div className="ui label">1</div>
+                </a>*/}
+                {/*<div className="item">
                     <div className="ui transparent icon input">
                         <input type="text" placeholder="Search.."/>
                         <i className="search icon"></i>
                     </div>
-                </div>
+                </div>*/}
                 <div className="item">
                     <div className="header">People</div>
                     <div className="menu">
