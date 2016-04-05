@@ -5,7 +5,7 @@ import { check } from 'meteor/check';
 import { Messages } from './messages';
 import { GroupMembers } from './group-members';
 
-export const Subjects = new Mongo.Collection('subjects');
+export const Subjects = new Mongo.Collection('Subjects');
 
 if (Meteor.isServer) {
     Meteor.publish('subjects', function(username) {

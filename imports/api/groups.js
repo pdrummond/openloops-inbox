@@ -2,7 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
-export const Groups = new Mongo.Collection('groups');
+import {GroupMembers} from './group-members.js';
+
+export const Groups = new Mongo.Collection('Groups');
 
 if (Meteor.isServer) {
     Meteor.publish('groups', function messagesPublication() {
@@ -47,7 +49,7 @@ Meteor.methods({
 
     'groups.remove'(groupId) {
         check(groupId, String);
-
+        GroupMembers.remove({groupId});
         Groups.remove(groupId);
     }
 });

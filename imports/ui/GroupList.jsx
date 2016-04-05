@@ -55,10 +55,6 @@ class GroupList extends Component {
                         type="text"
                         ref="nameInput"
                         placeholder="Group Name"/>
-                    <select ref='groupType'>
-                        <option value="group">Group</option>
-                        <option value="user">User</option>
-                    </select>
                     <button type="submit">Create Group</button>
                     </form> : '' }
                 </header>
@@ -77,9 +73,8 @@ class GroupList extends Component {
 
         const domain = ReactDOM.findDOMNode(this.refs.domainInput).value.trim();
         const name = ReactDOM.findDOMNode(this.refs.nameInput).value.trim();
-        const type = ReactDOM.findDOMNode(this.refs.groupType).value.trim();
         if(domain.length > 0 && name.length > 0) {
-            Meteor.call('groups.insert', domain, name, type);
+            Meteor.call('groups.insert', domain, name, 'group');
 
             ReactDOM.findDOMNode(this.refs.domainInput).value = '';
             ReactDOM.findDOMNode(this.refs.nameInput).value = '';

@@ -10,7 +10,6 @@ export default class SubjectBox extends Component {
             zenMode: false,
             createOnEnter: false,
         };
-        console.log("ctor zenMode: " + this.state.zenMode);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -37,7 +36,6 @@ export default class SubjectBox extends Component {
     }
 
     render() {
-        console.log("render createOnEnter:" + this.state.createOnEnter);
         return (
             <div className="message-box" style={{top: (this.state.zenMode?'75px':'auto')}}>
                 <div style={{display:'flex', width:'100%', padding:'10px 0px'}}>

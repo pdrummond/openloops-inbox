@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
-export const GroupMembers = new Mongo.Collection('group-members');
+export const GroupMembers = new Mongo.Collection('GroupMembers');
 
 if (Meteor.isServer) {
     Meteor.publish('group-members', function(groupId) {

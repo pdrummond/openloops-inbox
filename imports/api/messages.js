@@ -4,7 +4,7 @@ import { check } from 'meteor/check';
 
 import { Subjects } from './subjects.js';
 
-export const Messages = new Mongo.Collection('messages');
+export const Messages = new Mongo.Collection('Messages');
 
 if (Meteor.isServer) {
     Meteor.publish('messages', function messagesPublication(subjectId) {
