@@ -49,27 +49,23 @@ class GroupGrid extends Component {
                                 <button type="submit">Create Group</button>
                             </form> : '' }
                         </header>
-                        <div style={{margin:'50px'}}>
-                            <div className="ui one column grid">
-                                <div className="column">
-                                    <h2 className="ui header">
-                                        <span> <i className="ui circular star icon"></i> Featured Groups </span>
-                                    </h2>
-                                    <div className="ui secondary segment">
-                                        <ul className="ui cards group-grid">
-                                            {this.renderGroupCells()}
-                                        </ul>
-                                    </div>
+                        <div style={{margin:'50px', height:'calc(100% - 80px)', overflow:'auto'}}>
+                            <div style={{padding:'10px'}}>
+                                <h2 className="ui header">
+                                    <span> <i className="ui circular star icon"></i> Featured Groups </span>
+                                </h2>
+                                <div className="ui secondary segment">
+                                    <ul className="ui cards group-grid">
+                                        {this.renderGroupCells()}
+                                    </ul>
                                 </div>
-                                <div className="column">
-                                    <h2 className="ui header">
-                                        <span> <i className="ui circular user icon"></i> Top Users </span>
-                                    </h2>
-                                    <div className="ui secondary segment">
-                                        <ul className="ui cards group-grid">
-                                            {this.renderUserGroupCells()}
-                                        </ul>
-                                    </div>
+                                <h2 className="ui header">
+                                    <span> <i className="ui circular user icon"></i> Top Users </span>
+                                </h2>
+                                <div className="ui secondary segment">
+                                    <ul className="ui cards group-grid">
+                                        {this.renderUserGroupCells()}
+                                    </ul>
                                 </div>
                             </div>
                         </div>

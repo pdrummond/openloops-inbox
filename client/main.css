@@ -23,7 +23,7 @@ body {
 .container {
   min-width: 600px;
   margin: 0 auto;
-  min-height: 100%;
+  height: 100%;
   background: white;
 }
 

@@ -3,15 +3,23 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import { Messages } from './messages';
+import { Groups } from './groups';
 import { GroupMembers } from './group-members';
 
 export const Subjects = new Mongo.Collection('Subjects');
 
 if (Meteor.isServer) {
     Meteor.publish('subjects', function(username) {
-        const groupIds = GroupMembers.find({username}).map(function (member) {
-            return member.groupId;
+        let groupIds = [];
+        GroupMembers.find({username}).forEach(function (member) {
+            var group = Groups.findOne(member.groupId);
+            if(group.type == 'group') {
+                groupIds.push(member.groupId);
+            }
         });
+        let user = Meteor.users.findOne({username});
+        groupIds.push(user.groupId);
+        console.log("subject groupdIds: " + JSON.stringify(groupIds));
         return Subjects.find({$or: [{username}, {groupId: {$in: groupIds}}]});
     });
 

@@ -48,7 +48,7 @@ export default class MessageBox extends Component {
 
     render() {
         return (
-            <div className="message-box" style={{top: (this.state.zenMode?'75px':'auto')}}>
+            <div className="message-box" style={{top: (this.state.zenMode?'85px':'auto')}}>
                 <div style={{display:'flex', width:'100%', padding:'10px 0px'}}>
                     <div className="subject-type-dropdown ui icon top left pointing dropdown button" style={{height:'38px', marginRight:'-3px', backgroundColor:'whitesmoke', border:'none'}}>
                         <i className={Subjects.helpers.getSubjectTypeIconClassName(this.state.subjectType)}></i>

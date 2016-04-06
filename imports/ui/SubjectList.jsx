@@ -55,9 +55,10 @@ class SubjectList extends Component {
 
     renderHeader() {
         switch(this.props.homeSection) {
-            case 'inbox': return (<h1><i className="ui inbox icon"></i> Inbox</h1>);
-            case 'closed': return (<h1><i className="ui check circle outline icon"></i> Closed</h1>);
-            case 'drafts': return (<h1><i className="ui edit icon"></i> Drafts</h1>);
+            case 'inbox-old': return (<h1><i className="inbox icon"></i> Inbox</h1>);
+            case 'inbox': return (<h1><i className="comments outline icon"></i> Open Subjects</h1>);
+            case 'closed': return (<h1><i className="check circle outline icon"></i> Closed Subjects</h1>);
+            case 'drafts': return (<h1><i className="edit icon"></i> Draft Subjects</h1>);
             case 'group': {
                 var group = Groups.findOne(this.props.groupFilterId);
                 if(group.type == 'group') {
