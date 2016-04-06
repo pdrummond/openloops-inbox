@@ -17,16 +17,15 @@ export default class MainLayout extends Component {
                     </div>
                     <a href="/home/inbox" className="item active">< i className="ui home icon"></i> Home</a>
                     <a href="/explore" className="item"><i className = "ui compass icon"></i> Explore</a>
-                    <a className="item">Profile</a>
-
                     <div className="right menu">
                         <a className="ui item">
                             <AccountsUIWrapper />
                         </a>
                         <div className="ui  dropdown item">
-                            <i className="help circle icon"></i> Help
-                                <i className="dropdown icon"></i>
+                                <i className="ellipsis vertical icon"></i>
                                 <div className="menu">
+                                    <div className="item">Profile</div>
+                                    <div className="divider"></div>
                                     <div className="item">Help</div>
                                     <div className="item">Guided Tour</div>
                                 </div>
@@ -35,7 +34,7 @@ export default class MainLayout extends Component {
                     </div>
                     <div className="main-content">
                         {this.props.main()}
-                    </div>                    
+                    </div>
                 </div>
             );
         }
