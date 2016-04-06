@@ -55,7 +55,7 @@ class GroupGrid extends Component {
                                     <h2 className="ui header">
                                         <span> <i className="ui circular star icon"></i> Featured Groups </span>
                                     </h2>
-                                    <div className="ui segment">
+                                    <div className="ui secondary segment">
                                         <ul className="ui cards group-grid">
                                             {this.renderGroupCells()}
                                         </ul>
@@ -65,7 +65,7 @@ class GroupGrid extends Component {
                                     <h2 className="ui header">
                                         <span> <i className="ui circular user icon"></i> Top Users </span>
                                     </h2>
-                                    <div className="ui segment">
+                                    <div className="ui secondary segment">
                                         <ul className="ui cards group-grid">
                                             {this.renderUserGroupCells()}
                                         </ul>

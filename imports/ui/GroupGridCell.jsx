@@ -24,7 +24,7 @@ export default class GroupGridCell extends Component {
                     <strong>{this.props.group.domain} / {this.props.group.name}</strong>
                 </div>
                 <div className="image">
-                    <img style={{maxHeight:'160px'}} src={this.props.group.domain == 'openloops'?'https://lh3.googleusercontent.com/tCHpDXLENsjJ88yf0iE0HZvvEr0_l0n6Ugin1EW64Bqw9LZkTsR0N3bdM8Hyuk0Ld58=s630-fcrop64=1,2bf40000e4f2ff67':'http://iode.co.uk/images/foobit.png'}>
+                    <img style={{maxHeight:'160px'}} src={this.props.group.domain == 'openloops'?'https://lh3.googleusercontent.com/tCHpDXLENsjJ88yf0iE0HZvvEr0_l0n6Ugin1EW64Bqw9LZkTsR0N3bdM8Hyuk0Ld58=s630-fcrop64=1,2bf40000e4f2ff67':'/images/iode-logo.png'}>
                     </img>
                 </div>
                 <div className="content">
