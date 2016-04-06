@@ -26,7 +26,7 @@ class GroupGrid extends Component {
     renderUserGroupCells() {
         let filteredGroups = this.props.groups.filter(group => group.type == 'user');
         return filteredGroups.map((group) => (
-            <UserGroupGridCell key={group._id} group={group} />
+            <UserGroupGridCell key={group._id} group={group} groupMembers={this.props.groupMembers} />
         ));
     }
 

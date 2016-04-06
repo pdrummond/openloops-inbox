@@ -38,12 +38,40 @@ export default class UserGroupGridCell extends Component {
                 </div>
                 <div className="extra content">
                     <div className="ui two buttons">
-                        <div className="ui basic blue button"><i className="plus icon"></i> Follow</div>
+                        {this.renderFollowButton()}
                     </div>
-
                 </div>
             </div>
         );
+    }
+
+    renderFollowButton() {
+        var member = _.findWhere(this.props.groupMembers, {userId: Meteor.userId(), groupId: this.props.group._id});
+        if(member == null) {
+            return (
+                <div className="ui green button" onClick={this.handleFollowButtonClicked.bind(this)}>
+                    <i className="plus icon"></i> Follow
+                </div>
+            );
+        } else {
+            return (
+                <div className="ui animated vertical blue button" onClick={this.handleFollowButtonClicked.bind(this)}>
+                    <div className="visible content">Following</div>
+                    <div className="hidden content">
+                        Unfollow
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    handleFollowButtonClicked() {
+        var member = _.findWhere(this.props.groupMembers, {userId: Meteor.userId(), groupId: this.props.group._id});
+        if(member == null) {
+            Meteor.call('group-members.insert', Meteor.user().username, this.props.group._id);
+        } else {
+            Meteor.call('group-members.remove', member._id);
+        }
     }
 
     getUserProfileImage() {
