@@ -5,6 +5,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Groups } from '../api/groups.js';
 import { Subjects } from '../api/subjects.js';
+import {GroupMembers} from '../api/group-members.js';
 
 import GroupGridCell from './GroupGridCell.jsx';
 import UserGroupGridCell from './UserGroupGridCell.jsx';
@@ -18,7 +19,7 @@ class GroupGrid extends Component {
     renderGroupCells() {
         let filteredGroups = this.props.groups.filter(group => group.type == 'group');
         return filteredGroups.map((group) => (
-            <GroupGridCell key={group._id} group={group} />
+            <GroupGridCell key={group._id} group={group} groupMembers={this.props.groupMembers}/>
         ));
     }
 
@@ -101,9 +102,11 @@ GroupGrid.propTypes = {
 export default createContainer(() => {
     var groupsHandle = Meteor.subscribe('allGroups');
     var userDataHandle = Meteor.subscribe('userData');
+    var groupMembersHandle = Meteor.subscribe('currentUserGroupMembers');
     return {
-        loading: !(groupsHandle.ready() && userDataHandle.ready()),
+        loading: !(groupsHandle.ready() && userDataHandle.ready() && groupMembersHandle.ready()),
         groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
+        groupMembers: GroupMembers.find().fetch(),
         currentUser: Meteor.user()
     };
 }, GroupGrid);

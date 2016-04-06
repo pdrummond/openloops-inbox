@@ -8,6 +8,10 @@ if (Meteor.isServer) {
     Meteor.publish('group-members', function(groupId) {
         return GroupMembers.find({groupId});
     });
+
+    Meteor.publish('currentUserGroupMembers', function() {
+        return GroupMembers.find({userId: this.userId});
+    });
 }
 
 Meteor.methods({

@@ -28,3 +28,4 @@ dispatch:mocha-phantomjs
 jparker:gravatar
 momentjs:moment
 random
+peerlibrary:reactive-publish
