@@ -93,7 +93,7 @@ GroupList.propTypes = {
 };
 
 export default createContainer(() => {
-    var groupsHandle = Meteor.subscribe('groups');
+    var groupsHandle = Meteor.subscribe('allGroups');
     return {
         loading: !(groupsHandle.ready()),
         groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),

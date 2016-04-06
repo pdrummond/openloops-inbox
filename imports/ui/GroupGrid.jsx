@@ -103,7 +103,7 @@ GroupGrid.propTypes = {
 };
 
 export default createContainer(() => {
-    var groupsHandle = Meteor.subscribe('groups');
+    var groupsHandle = Meteor.subscribe('allGroups');
     var userDataHandle = Meteor.subscribe('userData');
     return {
         loading: !(groupsHandle.ready() && userDataHandle.ready()),

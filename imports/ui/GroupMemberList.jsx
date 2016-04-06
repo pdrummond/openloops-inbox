@@ -87,8 +87,9 @@ export default createContainer(() => {
     var groupId = FlowRouter.getParam('groupId');
     var groupMembersHandle = Meteor.subscribe('group-members', groupId);
     var currentGroupHandle = Meteor.subscribe('currentGroup', groupId);
+    var userDataHandle = Meteor.subscribe('userData');
     return {
-        loading: !(groupMembersHandle.ready() && currentGroupHandle.ready()),
+        loading: !(groupMembersHandle.ready() && currentGroupHandle.ready() && userDataHandle.ready()),
         groupMembers: GroupMembers.find({}, { sort: { createdAt: 1 } }).fetch(),
         currentUser: Meteor.user(),
         currentGroup: Groups.findOne(groupId)

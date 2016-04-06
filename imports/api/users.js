@@ -14,6 +14,9 @@ if(Meteor.isServer) {
 }
 
 Accounts.onCreateUser(function(options, user) {
+    // Generate a user ID ourselves as we will be using it for the group member.
+    user._id = Random.id();
+
     console.log("onCreateUser: " + JSON.stringify(user, null, 2));
     var email;
     if(user.emails) {
@@ -49,6 +52,7 @@ function createUserGroup(user) {
         username: user.username
     });
     const groupMemberId = GroupMembers.insert({
+        userId: user._id,
         username: user.username,
         groupId: userGroupId
     });

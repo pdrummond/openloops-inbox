@@ -7,12 +7,24 @@ import {GroupMembers} from './group-members.js';
 export const Groups = new Mongo.Collection('Groups');
 
 if (Meteor.isServer) {
-    Meteor.publish('groups', function messagesPublication() {
-        return Groups.find({});
+
+    Meteor.publish('allGroups', function() {
+        return Groups.find();
+    });
+
+    Meteor.publish('groups', function() {
+        //Publish all the groups that the current user is a member of
+        var groupIds = GroupMembers.find({userId: this.userId}).map(function (member) {
+            return member.groupId;
+        });
+        return Groups.find({_id: {$in: groupIds}});
     });
 
     Meteor.publish('currentGroup', function(groupId) {
-        return Groups.find({_id: groupId});
+        //Publish the group if the user is a member.
+        //if(GroupMembers.findOne({userId: this.userId, groupId})) {
+            return Groups.find({_id: groupId});
+        //}
     });
 }
 

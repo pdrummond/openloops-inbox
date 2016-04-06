@@ -46,12 +46,12 @@ export default class Group extends Component {
           );
       } else {
           return (
-              <span>
+               <a href={`/group/${this.props.group._id}`}><span>
                   <i className="user icon" style={{marginLeft:'10px', color:'gray'}}></i>
                   <span className="text">
                     <strong>{this.props.group.domain}</strong>
                 </span>
-              </span>
+            </span></a>
           );
       }
   }

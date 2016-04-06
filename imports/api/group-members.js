@@ -20,8 +20,17 @@ Meteor.methods({
             throw new Meteor.Error('not-authorized');
         }
 
+        console.log("finding user with username: '" + username + "''");
+        var user = Meteor.users.findOne({username});
+        console.log("user: " + user);
+        if(user == null) {
+            throw new Meteor.Error('cannot-find-user', 'There is no account with the username: ' + username);
+        }
+        console.log("user is: " + JSON.stringify(user, null, 2));
+
         var now = new Date();
         return GroupMembers.insert({
+            userId: user._id,
             username,
             groupId,
             createdAt: now,
