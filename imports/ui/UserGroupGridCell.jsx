@@ -28,14 +28,14 @@ export default class UserGroupGridCell extends Component {
                         My name is Paul, founder of OpenLoops and all round bad ass!
                     </div>
                 </div>*/}
-                <div className="content">
+                {/*<div className="content">
                     <span className="right floated">
                         <i className="block layout icon"></i>
                         120 groups
                     </span>
                     <i className="comment icon"></i>
                     70K messages
-                </div>
+                </div>*/}
                 <div className="extra content">
                     <div className="ui two buttons">
                         {this.renderFollowButton()}
