@@ -54,13 +54,20 @@ export default class MessageBox extends Component {
                         <i className={Subjects.helpers.getSubjectTypeIconClassName(this.state.subjectType)}></i>
                         <div className="menu">
                             <div className="item" data-value="discussion"><i className="comments icon"></i> Discussion</div>
+                            <div className="item" data-value="story"><i className="newspaper icon"></i> Story</div>
+                            <div className="item" data-value="journal"><i className="book icon"></i> Journal</div>
+                            <div className="divider"></div>
                             <div className="item" data-value="task"><i className="warning circle icon"></i> Task</div>
+                            <div className="item" data-value="feature"><i className="bullseye icon"></i> Feature</div>
+                            <div className="item" data-value="problem"><i className="bomb icon"></i> Problem</div>
+                            <div className="item" data-value="bug"><i className="bug icon"></i> Bug</div>
+                            <div className="divider"></div>
                             <div className="item" data-value="question"><i className="help circle icon"></i> Question</div>
                             <div className="item" data-value="idea"><i className="lightning icon"></i> Idea</div>
-                            <div className="item" data-value="issue"><i className="bug icon"></i> Issue</div>
+                            <div className="divider"></div>
                             <div className="item" data-value="announcement"><i className="announcement icon"></i> Announcement</div>
-                            <div className="item" data-value="journal"><i className="book icon"></i> Journal</div>
-                            <div className="item" data-value="story"><i className="newspaper icon"></i> Story</div>
+                            <div className="divider"></div>
+                            <div className="item" data-value="channel"><i className="square icon"></i> Channel</div>
                         </div>
                     </div>
                     <input ref="subjectRef" autofocus="autofocus" placeholder="Subject" style={{marginRight:'10px', height:'38px'}}/>

@@ -78,13 +78,21 @@ Subjects.helpers = {
         var typeClassName = 'discussion';
         switch(type) {
             case 'discussion': typeClassName = 'comments'; break;
+            case 'story': typeClassName = 'newspaper'; break;
+            case 'journal': typeClassName = 'book'; break;
+
             case 'task': typeClassName = 'warning circle'; break;
+            case 'feature': typeClassName = 'bullseye'; break;
+            case 'problem': typeClassName = 'bomb'; break;
+            case 'bug': typeClassName = 'bug'; break;
+
             case 'question': typeClassName = 'help circle'; break;
             case 'idea': typeClassName = 'lightning'; break;
-            case 'issue': typeClassName = 'bug'; break;
+
             case 'announcement': typeClassName = 'announcement'; break;
-            case 'journal': typeClassName = 'book'; break;
-            case 'story': typeClassName = 'newspaper'; break;
+
+            case 'channel': typeClassName = 'square'; break;
+
         }
         return "icon " + typeClassName;
     }

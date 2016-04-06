@@ -155,11 +155,16 @@ class MessageList extends Component {
                                 </h5>
                                 <select className="type-dropdown ui fluid dropdown">
                                     <option value="discussion">Discussion</option>
+                                    <option value="story">Story</option>
+                                    <option value="journal">Journal</option>
                                     <option value="task">Task</option>
+                                    <option value="feature">Feature</option>
+                                    <option value="problem">Problem</option>
+                                    <option value="bug">Bug</option>
                                     <option value="question">Question</option>
                                     <option value="idea">Idea</option>
-                                    <option value="issue">Issue</option>
                                     <option value="announcement">Announcement</option>
+                                    <option value="channel">Channel</option>
                                 </select>
 
                                 <h5 className="ui disabled header">
