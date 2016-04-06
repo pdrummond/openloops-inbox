@@ -9,17 +9,31 @@ import { GroupMembers } from './group-members';
 export const Subjects = new Mongo.Collection('Subjects');
 
 if (Meteor.isServer) {
-    Meteor.publish('subjects', function(username) {
+    Meteor.publish('subjects', function() {
+
+        /*
+            This publication is responsible for what subjects appear in the subject list
+            based on which groups and users you follow.
+
+            For NORMAL groups we want to publish all the subjects that belong to groups you are a member of.
+
+            For USER groups we only want the subjects that are sent to your user group.
+
+        */
+
         let groupIds = [];
-        GroupMembers.find({username}).forEach(function (member) {
+        var myFollowers = [];
+        GroupMembers.find({userId: this.userId}).forEach(function (member) {
             var group = Groups.findOne(member.groupId);
             if(group.type == 'group') {
                 groupIds.push(member.groupId);
             }
         });
-        let user = Meteor.users.findOne({username});
+        var user = Meteor.users.findOne(this.userId);
         groupIds.push(user.groupId);
-        console.log("subject groupdIds: " + JSON.stringify(groupIds));
+
+        //console.log("subject groupIds: " + JSON.stringify(groupIds));
+
         return Subjects.find({groupId: {$in: groupIds}}, {sort: {updatedAt: -1}});
     });
 

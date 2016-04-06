@@ -86,15 +86,9 @@ export default createContainer(() => {
     const homeSection = FlowRouter.getParam('homeSection');
     const groupFilterId = FlowRouter.getParam('groupFilterId');
     var groupsHandle = Meteor.subscribe('groups');
-    var subjectsHandleReady = false;
-    if(Meteor.user()) {
-        var subjectsHandle = Meteor.subscribe('subjects', Meteor.user().username);
-        subjectsHandleReady = subjectsHandle.ready();
-    } else {
-        subjectsHandleReady = true;
-    }
+    var subjectsHandle = Meteor.subscribe('subjects');
     var data = {
-        loading: !(groupsHandle.ready() && subjectsHandleReady),
+        loading: !(groupsHandle.ready() && subjectsHandle.ready()),
         groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
         incompleteCount: Subjects.find({ checked: { $ne: true } }).count(),
         currentUser: Meteor.user(),
