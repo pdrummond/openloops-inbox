@@ -19,17 +19,20 @@ if (Meteor.isServer) {
 
             2 - For USER groups we only want the subjects that are sent to your user group.
 
-            3 - Also need to always show subjects from you know matter where they are sent.
+            3 - If the subject is from me, then it should always be displayed IF I am following the USER group it is sent to.
 
         */
 
         let groupIds = [];
-        var myFollowers = [];
+        var userGroupIds = [];
         GroupMembers.find({userId: this.userId}).forEach(function (member) {
             var group = Groups.findOne(member.groupId);
             if(group.type == 'group') {
                 //(1)
                 groupIds.push(member.groupId);
+            } else {
+                //(3)
+                userGroupIds.push(member.groupId);
             }
         });
         var user = Meteor.users.findOne(this.userId);
@@ -37,9 +40,10 @@ if (Meteor.isServer) {
         groupIds.push(user.groupId);
 
         //console.log("subject groupIds: " + JSON.stringify(groupIds));
+        //console.log("subject userGroupIds: " + JSON.stringify(userGroupIds));
 
         return Subjects.find({ $or: [
-            {owner: this.userId}, //(3)
+            {owner: this.userId, groupId: {$in: userGroupIds}}, //(3) - if subject is from me and it's sent to a user I am following, then allow it.
             {groupId: {$in: groupIds}}
         ]}, {sort: {updatedAt: -1}});
     });
