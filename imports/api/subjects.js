@@ -20,7 +20,7 @@ if (Meteor.isServer) {
         let user = Meteor.users.findOne({username});
         groupIds.push(user.groupId);
         console.log("subject groupdIds: " + JSON.stringify(groupIds));
-        return Subjects.find({groupId: {$in: groupIds}});
+        return Subjects.find({groupId: {$in: groupIds}}, {sort: {updatedAt: -1}});
     });
 
     Meteor.publish('currentSubject', function(subjectId) {

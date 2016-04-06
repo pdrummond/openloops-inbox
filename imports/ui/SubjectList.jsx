@@ -109,7 +109,7 @@ export default createContainer(() => {
     if(groupFilterId != null) {
         selector.groupId = groupFilterId;
     }
-    data.subjects = Subjects.find(selector, { sort: { createdAt: -1 } }).fetch();
+    data.subjects = Subjects.find(selector, { sort: { updatedAt: -1 } }).fetch();
 
     return data;
 }, SubjectList);

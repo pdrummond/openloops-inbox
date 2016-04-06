@@ -18,12 +18,17 @@ Meteor.methods({
         check(text, String);
         check(subjectId, String);
 
-        // Make sure the user is logged in before inserting a message
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authorized');
         }
+
+        var subject = Subjects.findOne(subjectId);
+        if(!subject) {
+            throw new Meteor.Error('subject-not-found', 'No subject found with id ' + subjectId);
+        }
+
         const now = new Date();
-        Messages.insert({
+        var messageId = Messages.insert({
             text,
             subjectId,
             createdAt: now,
@@ -31,6 +36,12 @@ Meteor.methods({
             owner: Meteor.userId(),
             username: Meteor.user().username,
         });
+
+        if(messageId != null) {
+            Subjects.update(subject._id, { $set: {updatedAt: now}});
+        }
+
+        return messageId;
     },
 
     'messages.remove'(messageId) {
