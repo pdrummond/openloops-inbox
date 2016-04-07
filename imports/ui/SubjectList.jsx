@@ -102,6 +102,7 @@ export default createContainer(() => {
     }
     if(groupFilterId != null) {
         selector.groupId = groupFilterId;
+        selector.status = 'open';
     }
     data.subjects = Subjects.find(selector, { sort: { updatedAt: -1 } }).fetch();
 
