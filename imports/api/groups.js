@@ -3,6 +3,8 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 import {GroupMembers} from './group-members.js';
+import {Subjects} from './subjects.js';
+import {Messages} from './messages.js';
 
 export const Groups = new Mongo.Collection('Groups');
 
@@ -36,7 +38,7 @@ Meteor.methods({
         check(type, String);
 
         if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
+            throw new Meteor.Error('not-authenticated');
         }
 
         var now = new Date();
@@ -56,11 +58,27 @@ Meteor.methods({
         check(domain, String);
         check(name, String);
 
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
         Groups.update(groupId, {$set: {domain, name, updatedAt: new Date()}});
     },
 
     'groups.remove'(groupId) {
         check(groupId, String);
+
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
+        var group = Groups.findOne(groupId);
+        if(subject.owner !== this.userId) {
+            throw new Meteor.Error('not-authorized', 'Only the owner of the group can delete it');
+        }
+
+        Messages.remove({groupId});
+        Subjects.remove({groupId});
         GroupMembers.remove({groupId});
         Groups.remove(groupId);
     }

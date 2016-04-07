@@ -79,6 +79,16 @@ Meteor.methods({
 
     'subjects.remove'(subjectId) {
         check(subjectId, String);
+
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
+        var subject = Subjects.findOne(subjectId);
+        if(subject.owner !== this.userId) {
+            throw new Meteor.Error('not-authorized', 'Only the owner of the subject can delete it');
+        }
+
         Messages.remove({subjectId});
         Subjects.remove(subjectId);
     },
@@ -87,12 +97,20 @@ Meteor.methods({
         check(subjectId, String);
         check(status, String);
 
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
         Subjects.update(subjectId, { $set: { status } });
     },
 
     'subjects.updateType'(subjectId, type) {
         check(subjectId, String);
         check(type, String);
+
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
 
         Subjects.update(subjectId, { $set: { type } });
     }

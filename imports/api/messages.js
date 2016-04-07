@@ -19,7 +19,7 @@ Meteor.methods({
         check(subjectId, String);
 
         if (! Meteor.userId()) {
-            throw new Meteor.Error('not-authorized');
+            throw new Meteor.Error('not-authenticated');
         }
 
         var subject = Subjects.findOne(subjectId);
@@ -47,13 +47,15 @@ Meteor.methods({
     'messages.remove'(messageId) {
         check(messageId, String);
 
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
+        var message = Messages.findOne(messageId);
+        if(message.owner !== this.userId) {
+            throw new Meteor.Error('not-authorized', 'Only the owner of the message can delete it');
+        }
+
         Messages.remove(messageId);
-    },
-
-    'messages.setChecked'(messageId, setChecked) {
-        check(messageId, String);
-        check(setChecked, Boolean);
-
-        Messages.update(messageId, { $set: { checked: setChecked } });
-    }
+    }    
 });
