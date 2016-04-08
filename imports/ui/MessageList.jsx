@@ -284,7 +284,7 @@ class MessageList extends Component {
         var subjectHandle = Meteor.subscribe('currentSubject', subjectId);
         var userDataHandle = Meteor.subscribe('userData');
         return {
-            loading: !(groupsHandle.ready() && messagesHandle.ready() && subjectHandle.ready() && userDataHandle),
+            loading: !(groupsHandle.ready() && messagesHandle.ready() && subjectHandle.ready() && userDataHandle.ready()),
             groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
             messages: Messages.find({}, { sort: { createdAt: 1 } }).fetch(),
             incompleteCount: Messages.find({ checked: { $ne: true } }).count(),

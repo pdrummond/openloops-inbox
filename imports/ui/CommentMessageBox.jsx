@@ -15,7 +15,8 @@ export default class CommentMessageBox extends Component {
     render() {
         return (
             <div className="message-box" style={{top: (this.state.zenMode?'160px':'auto'), width: (this.state.zenMode?'calc(100% - 30px)':'calc(100% - 380px)')}}>
-                <textarea style={{height: (this.state.zenMode?'calc(100% - 40px)':'150px')}}
+                <textarea
+                    style={{height: (this.state.zenMode?'calc(100% - 40px)':'150px')}}
                     onChange={this.onChange.bind(this)}
                     onKeyDown={this.onKeyDown.bind(this)}
                     type="text"
@@ -29,7 +30,7 @@ export default class CommentMessageBox extends Component {
                         <input
                             type="checkbox"
                             checked={this.state.createOnEnter}
-                            onClick={() => { this.setState({createOnEnter: !this.state.createOnEnter}) } }/>
+                            onChange={() => { this.setState({createOnEnter: !this.state.createOnEnter}) } }/>
                         <label>Press ENTER to create</label>
                     </div>
                     <div style={{float:'right'}}>

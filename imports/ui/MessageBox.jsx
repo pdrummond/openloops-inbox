@@ -96,7 +96,7 @@ export default class MessageBox extends Component {
                         <input
                             type="checkbox"
                             checked={this.state.createOnEnter}
-                            onClick={() => { this.setState({createOnEnter: !this.state.createOnEnter}) } }/>
+                            onChange={() => { this.setState({createOnEnter: !this.state.createOnEnter}) } }/>
                         <label>Press ENTER to create</label>
                     </div>
                     <div style={{float:'right'}}>
