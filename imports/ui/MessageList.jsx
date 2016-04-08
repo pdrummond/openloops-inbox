@@ -66,7 +66,7 @@ class MessageList extends Component {
                     </header>
 
                     <div style={{marginTop:'20px', paddingRight:'350px', height:'100%'}}>
-                        <div ref="messageList" className="ui segment" style={{overflow: 'auto', height: 'calc(100% - 320px)'}}>
+                        <div ref="messageList" className="ui segment" style={{overflow: 'auto', height: this.props.currentUser?'calc(100% - 250px)':'calc(100% - 6px)'}}>
                             <ul className="ui feed">
                                 {/*}<div className="event">
                                 <div className="label">
@@ -111,6 +111,7 @@ class MessageList extends Component {
                                 </div>
                                 </div>*/}
                                 {this.renderMessages()}
+                                {this.renderSignUpMessage()}
                             </ul>
                             {this.renderMessageBox()}
                         </div>
@@ -236,12 +237,33 @@ class MessageList extends Component {
             }
         }
 
+        renderSignUpMessage() {
+            if(!this.props.currentUser) {
+                return (
+                    <div className="ui icon message">
+                        <i className="sign in icon"></i>
+                        <div className="content">
+                            <p>Want to comment on this conversation or start your own?</p>
+                            <div className="ui buttons">
+                                <button className="ui positive button">Sign-up for FREE!</button>
+                                <div className="or"></div>
+                                <button className="ui button">Login if you already have an account</button>
+                            </div>
+
+                        </div>
+                    </div>
+                );
+            }
+        }
+
         renderMessageBox() {
-            if(this.props.currentUser) {
-                return <CommentMessageBox
-                    onMessageCreated={this.scrollBottom.bind(this)}
-                    currentSubject={this.props.currentSubject}
-                    />;
+            if(this.props.currentUser != null) {
+                return (
+                    <CommentMessageBox
+                        onMessageCreated={this.scrollBottom.bind(this)}
+                        currentSubject={this.props.currentSubject}
+                        />
+                );
             }
         }
 
@@ -279,7 +301,7 @@ class MessageList extends Component {
 
     export default createContainer(() => {
         var subjectId = FlowRouter.getParam('subjectId');
-        var groupsHandle = Meteor.subscribe('groups');
+        var groupsHandle = Meteor.subscribe('allGroups');
         var messagesHandle = Meteor.subscribe('messages', subjectId);
         var subjectHandle = Meteor.subscribe('currentSubject', subjectId);
         var userDataHandle = Meteor.subscribe('userData');

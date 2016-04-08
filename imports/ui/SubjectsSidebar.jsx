@@ -15,7 +15,7 @@ export default class SubjectsSidebar extends Component {
     render() {
         return (
             <div className="ui vertical menu" style={{position:'fixed', width: '235px', left:'10px', top: '55px', margin:'30px 10px', height:'calc(100% - 105px)'}}>
-                <a href="/home/inbox" className={this.props.homeSection=='inbox' ? "teal item active" : "teal item"}>
+                <a href="/home/open" className={this.props.homeSection=='open' ? "teal item active" : "teal item"}>
                     Open
                     {/*<div className="ui teal pointing left label">1</div>*/}
                 </a>
@@ -51,17 +51,25 @@ export default class SubjectsSidebar extends Component {
 
     renderGroupItems() {
         const groups = this.props.groups.filter((group) => group.type == 'group');
-        return groups.map((group) => (
-            <a href={`/home/group/${group._id}`} key={group._id} className={this.props.groupFilterId == group._id ? 'active item' : 'item'}>
-                <i className="ui block layout icon"></i> {group.domain} / {group.name}
-            </a>
-        ));
+        if(groups.length > 0) {
+            return groups.map((group) => (
+                <a href={`/home/group/${group._id}`} key={group._id} className={this.props.groupFilterId == group._id ? 'active item' : 'item'}>
+                    <i className="ui block layout icon"></i> {group.domain} / {group.name}
+                </a>
+            ));
+        } else {
+            return <p style={{fontSize:'12px', marginLeft:'20px', color:'gray'}}>You aren't following any groups yet</p>;
+        }
     }
 
     renderUserItems() {
         const userGroups = this.props.groups.filter((group) => group.type == 'user');
-        return userGroups.map((group) => (
-            <a href={`/home/group/${group._id}`} key={group._id} className="item"><i className="ui user icon"></i> {group.domain}</a>
-        ));
+        if(userGroups.length > 0) {
+            return userGroups.map((group) => (
+                <a href={`/home/group/${group._id}`} key={group._id} className="item"><i className="ui user icon"></i> {group.domain}</a>
+            ));
+        } else {
+            return <p style={{fontSize:'12px', marginLeft:'20px', color:'gray'}}>You aren't following any users yet</p>;
+        }
     }
 }

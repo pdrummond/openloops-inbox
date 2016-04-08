@@ -56,6 +56,7 @@ Meteor.methods({
             updatedAt: now,
             owner: Meteor.userId(),
             username: Meteor.user().username,
+            isPublic: true
         });
     },
 

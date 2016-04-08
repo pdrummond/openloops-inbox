@@ -6,7 +6,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Groups } from '../api/groups.js';
 import { Subjects } from '../api/subjects.js';
 import {GroupMembers} from '../api/group-members.js';
-
+import FollowLoginModal from './FollowLoginModal.jsx';
 import GroupGridCell from './GroupGridCell.jsx';
 import UserGroupGridCell from './UserGroupGridCell.jsx';
 import CreateGroupModal from './CreateGroupModal.jsx';
@@ -20,7 +20,7 @@ class GroupGrid extends Component {
     renderGroupCells() {
         let filteredGroups = this.props.groups.filter(group => group.type == 'group');
         return filteredGroups.map((group) => (
-            <GroupGridCell key={group._id} group={group} groupMembers={this.props.groupMembers}/>
+            <GroupGridCell key={group._id} group={group} groupMembers={this.props.groupMembers} onShowFollowLoginModal={this.showFollowLoginModal.bind(this)}/>
         ));
     }
 
@@ -31,13 +31,18 @@ class GroupGrid extends Component {
         ));
     }
 
+    showFollowLoginModal() {
+        $('#follow-login-modal').modal('show');
+    }
+
     render() {
         if(this.props.loading) {
             return (<p>Loading...</p>);
         } else {
             return (
                 <div className="container group-list-wrapper">
-                        <div style={{marginLeft:'60px', marginTop:'10px'}}><CreateGroupModal/></div>
+                        <FollowLoginModal/>
+                        {Meteor.userId() ? <div style={{marginLeft:'60px', marginTop:'10px'}}><CreateGroupModal/></div>:''}
                         <div style={{margin:'50px', height:'calc(100% - 80px)', overflow:'auto'}}>
 
                             <div style={{padding:'10px'}}>

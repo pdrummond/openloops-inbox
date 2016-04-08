@@ -9,9 +9,16 @@ import { GroupMembers } from './group-members';
 export const Subjects = new Mongo.Collection('Subjects');
 
 if (Meteor.isServer) {
-    Meteor.publish('subjects', function() {
+    Meteor.publish('subjects', function(groupFilterId) {
 
         /*
+            If a user is logged in, then the subject publication is more complicated - see below
+            for more comments on that.  If not logged in, then it's simple - just return subjects
+            belonging to public groups only.
+        */
+
+        if(this.userId) {
+            /*
             This publication is responsible for what subjects appear in the subject list
             based on which groups and users you follow.
 
@@ -21,31 +28,33 @@ if (Meteor.isServer) {
 
             3 - If the subject is from me, then it should always be displayed IF I am following the USER group it is sent to.
 
-        */
+            */
+            let groupIds = [];
+            var userGroupIds = [];
+            GroupMembers.find({userId: this.userId}).forEach(function (member) {
+                var group = Groups.findOne(member.groupId);
+                if(group.type == 'group') {
+                    //(1)
+                    groupIds.push(member.groupId);
+                } else {
+                    //(3)
+                    userGroupIds.push(member.groupId);
+                }
+            });
+            var user = Meteor.users.findOne(this.userId);
+            //(2)
+            groupIds.push(user.groupId);
 
-        let groupIds = [];
-        var userGroupIds = [];
-        GroupMembers.find({userId: this.userId}).forEach(function (member) {
-            var group = Groups.findOne(member.groupId);
-            if(group.type == 'group') {
-                //(1)
-                groupIds.push(member.groupId);
-            } else {
-                //(3)
-                userGroupIds.push(member.groupId);
-            }
-        });
-        var user = Meteor.users.findOne(this.userId);
-        //(2)
-        groupIds.push(user.groupId);
+            //console.log("subject groupIds: " + JSON.stringify(groupIds));
+            //console.log("subject userGroupIds: " + JSON.stringify(userGroupIds));
 
-        //console.log("subject groupIds: " + JSON.stringify(groupIds));
-        //console.log("subject userGroupIds: " + JSON.stringify(userGroupIds));
-
-        return Subjects.find({ $or: [
-            {owner: this.userId, groupId: {$in: userGroupIds}}, //(3) - if subject is from me and it's sent to a user I am following, then allow it.
-            {groupId: {$in: groupIds}}
-        ]}, {sort: {updatedAt: -1}});
+            return Subjects.find({ $or: [
+                {owner: this.userId, groupId: {$in: userGroupIds}}, //(3) - if subject is from me and it's sent to a user I am following, then allow it.
+                {groupId: {$in: groupIds}}
+            ]}, {sort: {updatedAt: -1}});
+        } else {
+            return Subjects.find({groupId: groupFilterId});
+        }
     });
 
     Meteor.publish('currentSubject', function(subjectId) {
@@ -73,7 +82,7 @@ Meteor.methods({
             createdAt: now,
             updatedAt: now,
             owner: Meteor.userId(),
-            username: Meteor.user().username,
+            username: Meteor.user().username
         });
     },
 

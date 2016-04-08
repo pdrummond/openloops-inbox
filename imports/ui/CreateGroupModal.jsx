@@ -53,7 +53,7 @@ export default class CreateGroupModal extends Component {
                             <div className="field">
                                 <label>Description</label>
                                 <textarea ref="descriptionTextArea" rows="2"></textarea>
-                            </div>
+                            </div>                            
                         </form>
                     </div>
                     <div className="actions">

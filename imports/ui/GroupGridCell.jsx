@@ -23,7 +23,7 @@ export default class GroupGridCell extends Component {
                 <div className="content">
                     <img className="ui avatar image" src={this.props.group.logoImageUrl}>
                     </img>
-                    <strong>{this.props.group.domain} / {this.props.group.name}</strong>
+                    <strong><a href={`/home/group/${this.props.group._id}`}>{this.props.group.domain} / {this.props.group.name}</a></strong>
                 </div>
                 <div className="image">
                     <img style={{maxHeight:'160px'}} src={this.props.group.coverImageUrl}>
@@ -48,12 +48,20 @@ export default class GroupGridCell extends Component {
                         {this.renderFollowButton()}
                     </div>
                 </div>
-                <div className="extra content right">
-                    <EditGroupModal group={this.props.group}/>
-                    <div className="ui mini button" onClick={this.handleDeleteButtonClicked.bind(this)}><i className="remove icon"></i> Delete</div>
-                </div>
+                {this.renderOwnerButtons()}
             </div>
         );
+    }
+
+    renderOwnerButtons() {
+        if(Meteor.userId()) {
+            return (
+                <div className="extra content right">
+                <EditGroupModal group={this.props.group}/>
+                <div className="ui mini button" onClick={this.handleDeleteButtonClicked.bind(this)}><i className="remove icon"></i> Delete</div>
+            </div>
+            );
+        }
     }
 
     renderFollowButton() {
@@ -76,19 +84,20 @@ export default class GroupGridCell extends Component {
         }
     }
 
-    handleEditButtonClicked() {
-    }
-
     handleDeleteButtonClicked() {
         Meteor.call('groups.remove', this.props.group._id);
     }
 
     handleFollowButtonClicked() {
-        var member = _.findWhere(this.props.groupMembers, {userId: Meteor.userId(), groupId: this.props.group._id});
-        if(member == null) {
-            Meteor.call('group-members.insert', Meteor.user().username, this.props.group._id);
+        if(Meteor.userId()) {
+            var member = _.findWhere(this.props.groupMembers, {userId: Meteor.userId(), groupId: this.props.group._id});
+            if(member == null) {
+                Meteor.call('group-members.insert', Meteor.user().username, this.props.group._id);
+            } else {
+                Meteor.call('group-members.remove', member._id);
+            }
         } else {
-            Meteor.call('group-members.remove', member._id);
+            this.props.onShowFollowLoginModal();
         }
     }
 }
