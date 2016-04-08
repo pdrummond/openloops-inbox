@@ -9,6 +9,7 @@ import {GroupMembers} from '../api/group-members.js';
 
 import GroupGridCell from './GroupGridCell.jsx';
 import UserGroupGridCell from './UserGroupGridCell.jsx';
+import CreateGroupModal from './CreateGroupModal.jsx';
 
 class GroupGrid extends Component {
 
@@ -36,21 +37,9 @@ class GroupGrid extends Component {
         } else {
             return (
                 <div className="container group-list-wrapper">
-                    <header>
-                        { this.props.currentUser.username == 'pdrummond' ?
-                            <form className="new-group" onSubmit={this.handleSubmit.bind(this)} >
-                                <input
-                                    type="text"
-                                    ref="domainInput"
-                                    placeholder="Group Domain"/>
-                                <input
-                                    type="text"
-                                    ref="nameInput"
-                                    placeholder="Group Name"/>
-                                <button type="submit">Create Group</button>
-                            </form> : '' }
-                        </header>
+                        <div style={{marginLeft:'60px', marginTop:'10px'}}><CreateGroupModal/></div>
                         <div style={{margin:'50px', height:'calc(100% - 80px)', overflow:'auto'}}>
+
                             <div style={{padding:'10px'}}>
                                 <h2 className="ui header">
                                     <span> <i className="ui circular star icon"></i> Featured Groups </span>
@@ -71,42 +60,29 @@ class GroupGrid extends Component {
                             </div>
                         </div>
                     </div>
-                    );
-                }
+                );
             }
+        }
 
-            handleSubmit(event) {
-                event.preventDefault();
+        toggleHideCompleted() {
+            this.setState({
+                hideCompleted: !this.state.hideCompleted,
+            });
+        }
+    }
 
-                const domain = ReactDOM.findDOMNode(this.refs.domainInput).value.trim();
-                const name = ReactDOM.findDOMNode(this.refs.nameInput).value.trim();
-                if(domain.length > 0 && name.length > 0) {
-                    Meteor.call('groups.insert', domain, name, 'group');
-
-                    ReactDOM.findDOMNode(this.refs.domainInput).value = '';
-                    ReactDOM.findDOMNode(this.refs.nameInput).value = '';
-                }
-            }
-
-            toggleHideCompleted() {
-                this.setState({
-                    hideCompleted: !this.state.hideCompleted,
-                });
-            }
-}
-
-GroupGrid.propTypes = {
-    groups: PropTypes.array.isRequired
-};
-
-export default createContainer(() => {
-    var groupsHandle = Meteor.subscribe('allGroups');
-    var userDataHandle = Meteor.subscribe('userData');
-    var groupMembersHandle = Meteor.subscribe('currentUserGroupMembers');
-    return {
-        loading: !(groupsHandle.ready() && userDataHandle.ready() && groupMembersHandle.ready()),
-        groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
-        groupMembers: GroupMembers.find().fetch(),
-        currentUser: Meteor.user()
+    GroupGrid.propTypes = {
+        groups: PropTypes.array.isRequired
     };
-}, GroupGrid);
+
+    export default createContainer(() => {
+        var groupsHandle = Meteor.subscribe('allGroups');
+        var userDataHandle = Meteor.subscribe('userData');
+        var groupMembersHandle = Meteor.subscribe('currentUserGroupMembers');
+        return {
+            loading: !(groupsHandle.ready() && userDataHandle.ready() && groupMembersHandle.ready()),
+            groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
+            groupMembers: GroupMembers.find().fetch(),
+            currentUser: Meteor.user()
+        };
+    }, GroupGrid);

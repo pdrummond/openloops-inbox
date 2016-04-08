@@ -32,9 +32,12 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    'groups.insert'(domain, name, type) {
+    'groups.insert'(domain, name, description, logoImageUrl, coverImageUrl, type) {
         check(domain, String);
         check(name, String);
+        check(description, String);
+        check(logoImageUrl, String);
+        check(coverImageUrl, String);
         check(type, String);
 
         if (! Meteor.userId()) {
@@ -45,6 +48,9 @@ Meteor.methods({
         return Groups.insert({
             domain,
             name,
+            description,
+            logoImageUrl,
+            coverImageUrl,
             type,
             createdAt: now,
             updatedAt: now,
@@ -53,16 +59,24 @@ Meteor.methods({
         });
     },
 
-    'groups.update'(groupId, domain, name) {
+    'groups.update'(groupId, domain, name, description, logoImageUrl, coverImageUrl) {
         check(groupId, String);
         check(domain, String);
         check(name, String);
+        check(description, String);
+        check(logoImageUrl, String);
+        check(coverImageUrl, String);
 
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authenticated');
         }
 
-        Groups.update(groupId, {$set: {domain, name, updatedAt: new Date()}});
+        var group = Groups.findOne(groupId);
+        if(group.owner !== this.userId) {
+            throw new Meteor.Error('not-authorized', 'Only the owner of the group can delete it');
+        }
+
+        Groups.update(groupId, {$set: {domain, name, description, logoImageUrl, coverImageUrl, updatedAt: new Date()}});
     },
 
     'groups.remove'(groupId) {
@@ -73,7 +87,7 @@ Meteor.methods({
         }
 
         var group = Groups.findOne(groupId);
-        if(subject.owner !== this.userId) {
+        if(group.owner !== this.userId) {
             throw new Meteor.Error('not-authorized', 'Only the owner of the group can delete it');
         }
 

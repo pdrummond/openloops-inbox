@@ -3,6 +3,8 @@ import React, { Component, PropTypes } from 'react';
 
 import {Groups} from '../api/groups.js';
 
+import EditGroupModal from './EditGroupModal.jsx';
+
 export default class GroupGridCell extends Component {
 
     toggleChecked() {
@@ -19,32 +21,36 @@ export default class GroupGridCell extends Component {
         return (
             <div className="ui card">
                 <div className="content">
-                    <img className="ui avatar image" src={this.props.group.domain == 'openloops'?'https://www.openloopz.com/images/openloopz-o.png':'http://iode.co.uk/images/iode-o-logo-final-lowRes.png'}>
+                    <img className="ui avatar image" src={this.props.group.logoImageUrl}>
                     </img>
                     <strong>{this.props.group.domain} / {this.props.group.name}</strong>
                 </div>
                 <div className="image">
-                    <img style={{maxHeight:'160px'}} src={this.props.group.domain == 'openloops'?'https://lh3.googleusercontent.com/tCHpDXLENsjJ88yf0iE0HZvvEr0_l0n6Ugin1EW64Bqw9LZkTsR0N3bdM8Hyuk0Ld58=s630-fcrop64=1,2bf40000e4f2ff67':'/images/iode-logo.png'}>
+                    <img style={{maxHeight:'160px'}} src={this.props.group.coverImageUrl}>
                     </img>
                 </div>
                 <div className="content">
                     <div className="description">
-                        This is the group for development chat only.
+                        {this.props.group.description}
                     </div>
                 </div>
-                <div className="content">
+                {/*<div className="content">
                     <span className="right floated">
                         <i className="heart outline like icon"></i>
                         17 likes
                     </span>
                     <i className="user icon"></i>
                     3000 members
-                </div>
+                </div>*/}
                 <div className="extra content">
 
                     <div className="ui two buttons">
                         {this.renderFollowButton()}
                     </div>
+                </div>
+                <div className="extra content right">
+                    <EditGroupModal group={this.props.group}/>
+                    <div className="ui mini button" onClick={this.handleDeleteButtonClicked.bind(this)}><i className="remove icon"></i> Delete</div>
                 </div>
             </div>
         );
@@ -68,6 +74,13 @@ export default class GroupGridCell extends Component {
                 </div>
             );
         }
+    }
+
+    handleEditButtonClicked() {
+    }
+
+    handleDeleteButtonClicked() {
+        Meteor.call('groups.remove', this.props.group._id);
     }
 
     handleFollowButtonClicked() {
