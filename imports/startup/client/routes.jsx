@@ -8,6 +8,26 @@ import GroupGrid from '../../ui/GroupGrid.jsx';
 import GroupMemberList from '../../ui/GroupMemberList.jsx';
 import SubjectList from '../../ui/SubjectList.jsx';
 import MessageList from '../../ui/MessageList.jsx';
+import JoinPage from '../../ui/JoinPage.jsx';
+import LoginPage from '../../ui/LoginPage.jsx';
+
+FlowRouter.route('/join', {
+    name: 'join',
+    action() {
+        mount(JoinPage, {
+            main: () => <JoinPage/>
+        });
+    }
+});
+
+FlowRouter.route('/login', {
+    name: 'login',
+    action() {
+        mount(LoginPage, {
+            main: () => <LoginPage/>
+        });
+    }
+});
 
 FlowRouter.route('/home/:homeSection', {
     name: 'subjectList',

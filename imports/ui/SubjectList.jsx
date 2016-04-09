@@ -24,14 +24,14 @@ class SubjectList extends Component {
         } else {
             if(Meteor.userId()) {
                 return (
-                    <h2 className="ui center aligned icon disabled header" style={{marginTop:'100px'}}>
+                    <h2 className="ui center aligned icon disabled header" style={{marginTop:'20px'}}>
                         <i className="circular comments outline icon"></i>
                         You have no {this.props.homeSection} subjects.
                     </h2>
                 );
             } else {
                 return (
-                    <h2 className="ui center aligned icon disabled header" style={{marginTop:'100px'}}>
+                    <h2 className="ui center aligned icon disabled header" style={{marginTop:'20px'}}>
                         <i className="circular comments outline icon"></i>
                         All your {this.props.homeSection} subjects will appear here when you sign in.
                     </h2>
@@ -82,9 +82,9 @@ class SubjectList extends Component {
                         </div>
                         <p>Want to create or comment on subjects, follow groups and much, much more?</p>
                         <div className="ui buttons">
-                            <button className="ui positive button">Sign-up for FREE!</button>
+                            <a href="/join" className="ui positive button">Sign-up for FREE!</a>
                             <div className="or"></div>
-                            <button className="ui button">Login if you already have an account</button>
+                            <a href="/login" className="ui button">Login if you already have an account</a>
                         </div>
 
                     </div>

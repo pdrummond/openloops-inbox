@@ -245,9 +245,9 @@ class MessageList extends Component {
                         <div className="content">
                             <p>Want to comment on this conversation or start your own?</p>
                             <div className="ui buttons">
-                                <button className="ui positive button">Sign-up for FREE!</button>
+                                <a href="/join" className="ui positive button">Sign-up for FREE!</a>
                                 <div className="or"></div>
-                                <button className="ui button">Login if you already have an account</button>
+                                <a href="/login" className="ui button">Login if you already have an account</a>
                             </div>
 
                         </div>
