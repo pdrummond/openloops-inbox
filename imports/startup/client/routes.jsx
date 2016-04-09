@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { mount } from 'react-mounter';
 
 import MainLayout from '../../ui/MainLayout.jsx';
-import GroupList from '../../ui/GroupList.jsx';
+import LabelList from '../../ui/LabelList.jsx';
 import GroupGrid from '../../ui/GroupGrid.jsx';
 import GroupMemberList from '../../ui/GroupMemberList.jsx';
 import SubjectList from '../../ui/SubjectList.jsx';
@@ -47,6 +47,14 @@ FlowRouter.route('/home/:homeSection/:groupFilterId', {
     },
 });
 
+FlowRouter.route('/home/:homeSection/:groupFilterId/labels', {
+    name: 'labelList',
+    action() {
+        mount(MainLayout, {
+            main: () => <LabelList/>
+        });
+    },
+});
 
 FlowRouter.route('/subject/:subjectId', {
     name: 'messageList',

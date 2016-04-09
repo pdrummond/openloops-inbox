@@ -58,7 +58,19 @@ class SubjectList extends Component {
                         <header>
                             {this.renderHeader()}
                             <span style={{color:'lightgray', fontSize:'14px'}}>{this.props.subjects.length} subjects</span>
+                            {this.renderSettingsDropdown()}
                         </header>
+                        {/*<div className="ui secondary menu">
+                            <a className="header item">
+                                {this.renderHeader()}
+                                <span style={{color:'lightgray', position:'relative', top:'-2px', fontSize:'14px'}}>{this.props.subjects.length} subjects</span>
+                            </a>
+
+                            <div className="right menu">
+                                {this.renderSettingsDropdown()}
+                            </div>
+                        </div>*/}
+                        {/*this.renderGroupTabs()*/}
                     </div>
                     <div className="item-list subject-list ui segment" style={{height: Meteor.userId() ? 'calc(100% - 340px)':'calc(100% - 183px)'}}>
                         <ul>
@@ -66,6 +78,35 @@ class SubjectList extends Component {
                         </ul>
                     </div>
                     {this.renderMessageBox()}
+                </div>
+            );
+        }
+    }
+
+    renderGroupTabs() {
+        if(this.props.currentGroup && this.props.currentGroup.type == 'group') {
+            return (
+                <div className="ui secondary pointing menu">
+                    <a className="active item">
+                        All Open Subjects
+                    </a>
+                    <a className="item">
+                        Milestone One
+                    </a>
+                    <a className="item">
+                        All Closed Tasks
+                    </a>
+                    <div className="right menu">
+                        <div className="ui dropdown item">
+                            <i className="vertical ellipsis icon"></i>
+                            <div className="menu">
+                                <div className="ui item">New Tab</div>
+                                <div className="ui item">Delete Tab</div>
+                                <div className="ui divider"></div>
+                                <div className="ui item">Edit Tabs</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             );
         }
@@ -96,6 +137,22 @@ class SubjectList extends Component {
     renderMessageBox() {
         if(Meteor.userId()) {
             return <MessageBox groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>;
+        }
+    }
+
+    renderSettingsDropdown() {
+        if(this.props.currentGroup && this.props.currentGroup.type == 'group') {
+            return (
+                <div className="ui inline icon dropdown" style={{marginLeft:'20px'}}>
+                    <i className="circular wrench icon"></i>
+                    <div className="menu">
+                        <div className="item" onClick={() => { FlowRouter.go(`/home/group/${this.props.currentGroup._id}/labels`)}}>Labels</div>
+                        <div className="ui divider"></div>
+                        <div className="item">Edit Group</div>
+                        <div className="item">Delete Group</div>
+                    </div>
+                </div>
+            );
         }
     }
 
@@ -140,6 +197,7 @@ export default createContainer(() => {
     var data = {
         loading: !(groupsHandle.ready() && subjectsHandle.ready() && currentGroupReady),
         groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
+        currentGroup: Groups.findOne(groupFilterId),
         currentUser: Meteor.user(),
         homeSection,
         groupFilterId
