@@ -35,6 +35,9 @@ export default class Subject extends Component {
                 <a href={`/subject/${this.props.subject._id}`}><span className="text">
                     <strong>{this.props.subject.text}</strong>
                     {this.renderToField()}
+                    <span style={{marginLeft:'10px'}}>
+                        {this.renderLabels()}
+                    </span>
                 </span></a>
             </li>
         );
@@ -44,14 +47,27 @@ export default class Subject extends Component {
         var group = Groups.findOne(this.props.subject.groupId);
         if(group != null) {
             var toLabel = group.type == 'group' ? group.domain + "/" + group.name : group.domain;
-            return <span style={{fontSize:'12px', marginLeft:'5px', color:'#B0B0B0'}}> from <strong>{this.props.subject.username}</strong> to <strong>{toLabel}</strong></span>;
-            }
+            return (<span style={{fontSize:'12px', marginLeft:'5px', color:'#B0B0B0'}}> from <strong>{this.props.subject.username}</strong> to <strong>{toLabel}</strong></span>);
         }
-
     }
 
-    Subject.propTypes = {
-        // This component gets the subject to display through a React prop.
-        // We can use propTypes to indicate it is required
-        subject: PropTypes.object.isRequired,
-    };
+    renderLabels() {
+        if(this.props.subject.labels) {
+            const subjectLabels = this.props.subject.labels.map((labelId) => {
+                return _.findWhere(this.props.groupLabels, {_id: labelId});
+            });
+
+            return subjectLabels.map((label) => {
+                return (
+                    <div key={label._id} className="ui mini label" style={{backgroundColor: label.color, color:'white'}}>{label.text}</div>
+                );
+            });
+        }
+    }
+}
+
+Subject.propTypes = {
+    // This component gets the subject to display through a React prop.
+    // We can use propTypes to indicate it is required
+    subject: PropTypes.object.isRequired,
+};

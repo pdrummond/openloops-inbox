@@ -6,7 +6,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Groups } from '../api/groups.js';
 import { Subjects } from '../api/subjects.js';
 import { Messages } from '../api/messages.js';
+import { Labels } from '../api/labels.js';
 
+import SubjectLabelsSidebar from './SubjectLabelsSidebar.jsx';
 import CommentMessageBox from './CommentMessageBox.jsx';
 import Message from './Message.jsx';
 
@@ -68,7 +70,7 @@ class MessageList extends Component {
                     <div style={{marginTop:'20px', paddingRight:'350px', height:'100%'}}>
                         <div ref="messageList" className="ui segment" style={{overflow: 'auto', height: this.props.currentUser?'calc(100% - 250px)':'calc(100% - 6px)'}}>
                             <ul className="ui feed">
-                                {/*}<div className="event">
+                                {/*<div className="event">
                                 <div className="label">
                                 <img src="http://semantic-ui.com/images/avatar/small/elliot.jpg"/>
                                 </div>
@@ -116,41 +118,7 @@ class MessageList extends Component {
                             {this.renderMessageBox()}
                         </div>
                         <div className="subject-right-sidebar ui segment">
-                            {/*<h5 className="ui disabled header">
-                                <span><i className="ui tag icon"></i> LABELS</span>
-                                </h5>
-                                <div className="ui segment">
-                                <div className="ui divided selection list">
-                                <a className="item">
-                                <div className="ui red horizontal label">can't-reproduce</div>
-                                </a>
-                                <a className="item">
-                                <div className="ui purple horizontal label">in-progress</div>
-                                </a>
-                                <a className="item">
-                                <div className="ui red horizontal label">Important</div>
-                                </a>
-                                <a className="item">
-                                <div className="ui teal horizontal label">Release v1</div>
-                                Core functionality only
-                                </a>
-                                </div>
-                                </div>
-                                <h5 className="ui disabled header">
-                                <span><i className="ui user icon"></i> ASSIGNEE</span>
-                                </h5>
-                                <div className="ui card">
-                                <div className="content">
-                                <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar/small/elliot.jpg"/>
-                                <div className="header">
-                                Paul Drummond
-                                </div>
-                                <div className="meta">
-                                Developer
-                                </div>
-
-                                </div>
-                                </div>*/}
+                                <SubjectLabelsSidebar currentSubject={this.props.currentSubject} groupLabels={this.props.groupLabels}/>
                                 <h5 className="ui disabled header">
                                     <span><i className="ui circle icon"></i> TYPE</span>
                                 </h5>
@@ -305,12 +273,14 @@ class MessageList extends Component {
         var messagesHandle = Meteor.subscribe('messages', subjectId);
         var subjectHandle = Meteor.subscribe('currentSubject', subjectId);
         var userDataHandle = Meteor.subscribe('userData');
+        var labelsHandle = Meteor.subscribe('subjectGroupLabels', subjectId);
         return {
-            loading: !(groupsHandle.ready() && messagesHandle.ready() && subjectHandle.ready() && userDataHandle.ready()),
+            loading: !(groupsHandle.ready() && messagesHandle.ready() && subjectHandle.ready() && userDataHandle.ready() && labelsHandle),
             groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
             messages: Messages.find({}, { sort: { createdAt: 1 } }).fetch(),
             incompleteCount: Messages.find({ checked: { $ne: true } }).count(),
             currentUser: Meteor.user(),
-            currentSubject: Subjects.findOne(subjectId)
+            currentSubject: Subjects.findOne(subjectId),
+            groupLabels: Labels.find().fetch()
         };
     }, MessageList);

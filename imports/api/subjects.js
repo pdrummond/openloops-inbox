@@ -82,7 +82,8 @@ Meteor.methods({
             createdAt: now,
             updatedAt: now,
             owner: Meteor.userId(),
-            username: Meteor.user().username
+            username: Meteor.user().username,
+            labels: []
         });
     },
 
@@ -122,6 +123,42 @@ Meteor.methods({
         }
 
         Subjects.update(subjectId, { $set: { type } });
+    },
+
+    'subjects.toggleLabel'(subjectId, labelId) {
+        check(subjectId, String);
+        check(labelId, String);
+
+        console.log("subjects.toggleLabel subjectId=" + subjectId + ", labelId:" + labelId);
+
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
+        let subject = Subjects.findOne(subjectId);
+        let hasLabel = false;
+        console.log("xxx subject labels: " + JSON.stringify(subject.labels));
+        if(subject.labels) {
+            hasLabel = _.contains(subject.labels, labelId);
+        }
+        console.log("hasLabel:" + hasLabel);
+
+        var now = new Date();
+        if(hasLabel) {
+            console.log("removing label " + labelId + " from subject " + subjectId);
+            Subjects.update(subjectId, {
+                $pull: {labels: labelId},
+                $set: {updatedAt: now}
+            });
+        } else {
+            console.log("adding label " + labelId + " to subject " + subjectId);
+            Subjects.update(subjectId, {
+                $addToSet: {labels: labelId},
+                $set: {updatedAt: now}
+            });
+        }
+        subject = Subjects.findOne(subjectId);
+        console.log("subject labels: " + JSON.stringify(subject.labels));
     }
 });
 

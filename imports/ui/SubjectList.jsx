@@ -5,6 +5,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 import { Groups } from '../api/groups.js';
 import { Subjects } from '../api/subjects.js';
+import { Labels } from '../api/labels.js';
 
 import Subject from './Subject.jsx';
 import MessageBox from './MessageBox.jsx';
@@ -19,7 +20,7 @@ class SubjectList extends Component {
     renderSubjects() {
         if(this.props.subjects.length > 0) {
             return this.props.subjects.map((subject) => (
-                <Subject key={subject._id} subject={subject} />
+                <Subject key={subject._id} subject={subject} groupLabels={this.props.groupLabels}/>
             ));
         } else {
             if(Meteor.userId()) {
@@ -193,11 +194,12 @@ export default createContainer(() => {
     }
     var groupsHandle = Meteor.subscribe('groups');
     var subjectsHandle = Meteor.subscribe('subjects', groupFilterId);
-
+    var labelsHandle = Meteor.subscribe('labels', groupFilterId);
     var data = {
-        loading: !(groupsHandle.ready() && subjectsHandle.ready() && currentGroupReady),
+        loading: !(groupsHandle.ready() && subjectsHandle.ready() && currentGroupReady && labelsHandle.ready()),
         groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
         currentGroup: Groups.findOne(groupFilterId),
+        groupLabels: Labels.find().fetch(),
         currentUser: Meteor.user(),
         homeSection,
         groupFilterId

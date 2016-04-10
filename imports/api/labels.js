@@ -2,13 +2,20 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
-import { Groups } from './groups.js'
+import { Groups } from './groups.js';
+import { Subjects } from './subjects.js';
 
 export const Labels = new Mongo.Collection('Labels');
 
 if (Meteor.isServer) {
-    Meteor.publish('labels', function labelsPublication(groupId) {
+    Meteor.publish('labels', function(groupId) {
         return Labels.find({groupId});
+    });
+
+    Meteor.publish('subjectGroupLabels', function(subjectId) {
+        var subject = Subjects.findOne(subjectId);
+        var group = Groups.findOne(subject.groupId);
+        return Labels.find({groupId: group._id});
     });
 }
 
