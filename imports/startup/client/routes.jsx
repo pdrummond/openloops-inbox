@@ -47,6 +47,15 @@ FlowRouter.route('/home/:homeSection/:groupFilterId', {
     },
 });
 
+FlowRouter.route('/home/:homeSection/:groupFilterId/label/:labelFilterId', {
+    name: 'subjectList',
+    action() {
+        mount(MainLayout, {
+            main: () => <SubjectList/>
+        });
+    },
+});
+
 FlowRouter.route('/home/:homeSection/:groupFilterId/labels', {
     name: 'labelList',
     action() {

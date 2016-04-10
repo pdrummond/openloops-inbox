@@ -27,7 +27,7 @@ class SubjectList extends Component {
                 return (
                     <h2 className="ui center aligned icon disabled header" style={{marginTop:'20px'}}>
                         <i className="circular comments outline icon"></i>
-                        You have no {this.props.homeSection} subjects.
+                        No Subjects Found.
                     </h2>
                 );
             } else {
@@ -56,12 +56,20 @@ class SubjectList extends Component {
                     {this.renderSignUpMessage()}
                     <SubjectsSidebar homeSection={this.props.homeSection} groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>
                     <div>
-                        <header>
-                            {this.renderHeader()}
-                            <span style={{color:'lightgray', fontSize:'14px'}}>{this.props.subjects.length} subjects</span>
+                        <div className="ui secondary pointing menu">
+                            <a href={this.props.groupFilterId?`/home/group/${this.props.groupFilterId}`:''} className={this.props.labelFilterId?"header item":"active header item"} style={{padding:'0px'}}>
+                                {this.renderHeader()}
+                                <span style={{color:'lightgray', position:'relative', top:'-2px', fontSize:'14px'}}>{this.props.subjects.length} subjects</span>
+                            </a>
+                            <div className="right menu">
+                                {this.renderFavouriteLabelItems()}
+                                {this.renderSettingsDropdown()}
+                            </div>
+                        </div>
+                        {/*}<header>
                             {this.renderSettingsDropdown()}
                         </header>
-                        {/*<div className="ui secondary menu">
+                        <div className="ui secondary menu">
                             <a className="header item">
                                 {this.renderHeader()}
                                 <span style={{color:'lightgray', position:'relative', top:'-2px', fontSize:'14px'}}>{this.props.subjects.length} subjects</span>
@@ -71,7 +79,6 @@ class SubjectList extends Component {
                                 {this.renderSettingsDropdown()}
                             </div>
                         </div>*/}
-                        {/*this.renderGroupTabs()*/}
                     </div>
                     <div className="item-list subject-list ui segment" style={{height: Meteor.userId() ? 'calc(100% - 340px)':'calc(100% - 183px)'}}>
                         <ul>
@@ -84,33 +91,14 @@ class SubjectList extends Component {
         }
     }
 
-    renderGroupTabs() {
-        if(this.props.currentGroup && this.props.currentGroup.type == 'group') {
+    renderFavouriteLabelItems() {
+        return this.props.groupLabels.map((label) => {
             return (
-                <div className="ui secondary pointing menu">
-                    <a className="active item">
-                        All Open Subjects
-                    </a>
-                    <a className="item">
-                        Milestone One
-                    </a>
-                    <a className="item">
-                        All Closed Tasks
-                    </a>
-                    <div className="right menu">
-                        <div className="ui dropdown item">
-                            <i className="vertical ellipsis icon"></i>
-                            <div className="menu">
-                                <div className="ui item">New Tab</div>
-                                <div className="ui item">Delete Tab</div>
-                                <div className="ui divider"></div>
-                                <div className="ui item">Edit Tabs</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <a href={`/home/group/${this.props.currentGroup._id}/label/${label._id}`} key={label._id} className={this.props.labelFilterId && this.props.labelFilterId == label._id?"ui active item":"ui item"}>
+                    <i className="tag icon" style={{color: label.color}}></i> {label.text}
+                </a>
             );
-        }
+        });
     }
 
     renderSignUpMessage() {
@@ -144,7 +132,7 @@ class SubjectList extends Component {
     renderSettingsDropdown() {
         if(this.props.currentGroup && this.props.currentGroup.type == 'group') {
             return (
-                <div className="ui inline icon dropdown" style={{marginLeft:'20px'}}>
+                <div className="ui inline icon dropdown" style={{position:'relative', top:'5px', right:'0px'}}>
                     <i className="circular wrench icon"></i>
                     <div className="menu">
                         <div className="item" onClick={() => { FlowRouter.go(`/home/group/${this.props.currentGroup._id}/labels`)}}>Labels</div>
@@ -182,6 +170,7 @@ SubjectList.propTypes = {
 export default createContainer(() => {
     const homeSection = FlowRouter.getParam('homeSection');
     const groupFilterId = FlowRouter.getParam('groupFilterId');
+    const labelFilterId = FlowRouter.getParam('labelFilterId');
     let currentGroupReady = false;
     if(groupFilterId != null) {
         /*
@@ -193,7 +182,7 @@ export default createContainer(() => {
         currentGroupReady = true;
     }
     var groupsHandle = Meteor.subscribe('groups');
-    var subjectsHandle = Meteor.subscribe('subjects', groupFilterId);
+    var subjectsHandle = Meteor.subscribe('subjects', groupFilterId, labelFilterId);
     var labelsHandle = Meteor.subscribe('labels', groupFilterId);
     var data = {
         loading: !(groupsHandle.ready() && subjectsHandle.ready() && currentGroupReady && labelsHandle.ready()),
@@ -202,7 +191,8 @@ export default createContainer(() => {
         groupLabels: Labels.find().fetch(),
         currentUser: Meteor.user(),
         homeSection,
-        groupFilterId
+        groupFilterId,
+        labelFilterId
     };
     let selector = {};
     switch(homeSection) {
