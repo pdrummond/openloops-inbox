@@ -4,6 +4,7 @@ import { mount } from 'react-mounter';
 
 import MainLayout from '../../ui/MainLayout.jsx';
 import LabelList from '../../ui/LabelList.jsx';
+import TabList from '../../ui/TabList.jsx';
 import GroupGrid from '../../ui/GroupGrid.jsx';
 import GroupMemberList from '../../ui/GroupMemberList.jsx';
 import SubjectList from '../../ui/SubjectList.jsx';
@@ -47,13 +48,31 @@ FlowRouter.route('/home/:homeSection/:groupFilterId', {
     },
 });
 
+FlowRouter.route('/home/:homeSection/:groupFilterId/tab/:tabFilterId', {
+    name: 'subjectList',
+    action() {
+        mount(MainLayout, {
+            main: () => <SubjectList/>
+        });
+    }
+});
+
 FlowRouter.route('/home/:homeSection/:groupFilterId/labels', {
     name: 'labelList',
     action() {
         mount(MainLayout, {
             main: () => <LabelList/>
         });
-    },
+    }
+});
+
+FlowRouter.route('/home/:homeSection/:groupFilterId/tabs', {
+    name: 'tabList',
+    action() {
+        mount(MainLayout, {
+            main: () => <TabList/>
+        });
+    }
 });
 
 FlowRouter.route('/subject/:subjectId', {

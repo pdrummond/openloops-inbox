@@ -5,11 +5,22 @@ import { check } from 'meteor/check';
 import { Messages } from './messages';
 import { Groups } from './groups';
 import { GroupMembers } from './group-members';
+import { Tabs } from './tabs';
 
 export const Subjects = new Mongo.Collection('Subjects');
 
 if (Meteor.isServer) {
-    Meteor.publish('subjects', function(groupFilterId) {
+    Meteor.publish('subjects', function(groupFilterId, tabFilterId) {
+        var subjectSelector = {};
+        if(tabFilterId) {
+            var tab = Tabs.findOne(tabFilterId);
+            if(tab.typeQuery && tab.typeQuery.length > 0) {
+                subjectSelector.type = {$in: tab.typeQuery};
+            }
+            if(tab.statusQuery && tab.statusQuery.length > 0) {
+                subjectSelector.status = {$in: tab.statusQuery};
+            }            
+        }
 
         /*
             If a user is logged in, then the subject publication is more complicated - see below
@@ -48,10 +59,11 @@ if (Meteor.isServer) {
             //console.log("subject groupIds: " + JSON.stringify(groupIds));
             //console.log("subject userGroupIds: " + JSON.stringify(userGroupIds));
 
-            return Subjects.find({ $or: [
-                {owner: this.userId, groupId: {$in: userGroupIds}}, //(3) - if subject is from me and it's sent to a user I am following, then allow it.
-                {groupId: {$in: groupIds}}
-            ]}, {sort: {updatedAt: -1}});
+            subjectSelector.$or = [
+                    {owner: this.userId, groupId: {$in: userGroupIds}}, //(3) - if subject is from me and it's sent to a user I am following, then allow it.
+                    {groupId: {$in: groupIds}}
+                ];
+            return Subjects.find(subjectSelector, {sort: {updatedAt: -1}});
         } else {
             return Subjects.find({groupId: groupFilterId});
         }

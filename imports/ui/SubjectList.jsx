@@ -6,6 +6,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Groups } from '../api/groups.js';
 import { Subjects } from '../api/subjects.js';
 import { Labels } from '../api/labels.js';
+import { Tabs } from '../api/tabs.js';
 
 import Subject from './Subject.jsx';
 import MessageBox from './MessageBox.jsx';
@@ -71,7 +72,7 @@ class SubjectList extends Component {
                                 {this.renderSettingsDropdown()}
                             </div>
                         </div>*/}
-                        {/*this.renderGroupTabs()*/}
+                        {this.renderGroupTabs()}
                     </div>
                     <div className="item-list subject-list ui segment" style={{height: Meteor.userId() ? 'calc(100% - 340px)':'calc(100% - 183px)'}}>
                         <ul>
@@ -88,15 +89,7 @@ class SubjectList extends Component {
         if(this.props.currentGroup && this.props.currentGroup.type == 'group') {
             return (
                 <div className="ui secondary pointing menu">
-                    <a className="active item">
-                        All Open Subjects
-                    </a>
-                    <a className="item">
-                        Milestone One
-                    </a>
-                    <a className="item">
-                        All Closed Tasks
-                    </a>
+                    {this.renderTabItems()}
                     <div className="right menu">
                         <div className="ui dropdown item">
                             <i className="vertical ellipsis icon"></i>
@@ -110,6 +103,19 @@ class SubjectList extends Component {
                     </div>
                 </div>
             );
+        }
+    }
+
+    renderTabItems() {
+        console.log("RENDER TAB ITEMS:" + JSON.stringify(this.props));
+        if(this.props.groupTabs && this.props.groupTabs.length > 0) {
+            return this.props.groupTabs.map((tab) => {
+                return (
+                    <a key={tab._id} href={`/home/group/${this.props.currentGroup._id}/tab/${tab._id}`} className={(this.props.currentTab && this.props.currentTab._id == tab._id)?"active item":"item"}>
+                        {tab.text}
+                    </a>
+                );
+            });
         }
     }
 
@@ -148,6 +154,7 @@ class SubjectList extends Component {
                     <i className="circular wrench icon"></i>
                     <div className="menu">
                         <div className="item" onClick={() => { FlowRouter.go(`/home/group/${this.props.currentGroup._id}/labels`)}}>Labels</div>
+                        <div className="item" onClick={() => { FlowRouter.go(`/home/group/${this.props.currentGroup._id}/tabs`)}}>Tabs</div>
                         <div className="ui divider"></div>
                         <div className="item">Edit Group</div>
                         <div className="item">Delete Group</div>
@@ -182,6 +189,7 @@ SubjectList.propTypes = {
 export default createContainer(() => {
     const homeSection = FlowRouter.getParam('homeSection');
     const groupFilterId = FlowRouter.getParam('groupFilterId');
+    const tabFilterId = FlowRouter.getParam('tabFilterId');
     let currentGroupReady = false;
     if(groupFilterId != null) {
         /*
@@ -192,14 +200,23 @@ export default createContainer(() => {
     } else {
         currentGroupReady = true;
     }
+    let currentTabReady = false;
+    if(tabFilterId != null) {
+        currentTabReady = Meteor.subscribe('currentTab', tabFilterId);
+    } else {
+        currentTabReady = true;
+    }
     var groupsHandle = Meteor.subscribe('groups');
-    var subjectsHandle = Meteor.subscribe('subjects', groupFilterId);
+    var subjectsHandle = Meteor.subscribe('subjects', groupFilterId, tabFilterId);
     var labelsHandle = Meteor.subscribe('labels', groupFilterId);
+    var tabsHandle = Meteor.subscribe('tabs', groupFilterId);
     var data = {
-        loading: !(groupsHandle.ready() && subjectsHandle.ready() && currentGroupReady && labelsHandle.ready()),
+        loading: !(groupsHandle.ready() && subjectsHandle.ready() && currentGroupReady && currentTabReady && labelsHandle.ready()),
         groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
         currentGroup: Groups.findOne(groupFilterId),
+        currentTab: Tabs.findOne(tabFilterId),
         groupLabels: Labels.find().fetch(),
+        groupTabs: Tabs.find().fetch(),
         currentUser: Meteor.user(),
         homeSection,
         groupFilterId
@@ -214,7 +231,7 @@ export default createContainer(() => {
         selector.status = 'open';
     }
     data.subjects = Subjects.find(selector, { sort: { updatedAt: -1 } }).fetch();
-    console.log("SubjectList loading " + data.loading + ", subjects: " + JSON.stringify(data.subjects));
+    //console.log("SubjectList loading " + data.loading + ", subjects: " + JSON.stringify(data.subjects));
 
     return data;
 }, SubjectList);
