@@ -52,10 +52,14 @@ export default class Subject extends Component {
     }
 
     renderLabels() {
-        if(this.props.subject.labels) {
-            const subjectLabels = this.props.subject.labels.map((labelId) => {
-                return _.findWhere(this.props.groupLabels, {_id: labelId});
-            });
+        if(this.props.subject.labels && this.props.subject.labels.length > 0) {
+            const subjectLabels = [];
+            this.props.subject.labels.forEach((labelId) => {
+                let label = _.findWhere(this.props.groupLabels, {_id: labelId});
+                if(label != null) {
+                    subjectLabels.push(label);
+                }
+            });            
 
             return subjectLabels.map((label) => {
                 return (

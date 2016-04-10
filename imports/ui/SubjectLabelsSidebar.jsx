@@ -63,8 +63,12 @@ export default class SubjectLabelsSidebar extends Component {
 
     renderSubjectLabels() {
         if(this.props.currentSubject.labels && this.props.currentSubject.labels.length > 0) {
-            const subjectLabels = this.props.currentSubject.labels.map((labelId) => {
-                return _.findWhere(this.props.groupLabels, {_id: labelId});
+            const subjectLabels = [];
+            this.props.currentSubject.labels.forEach((labelId) => {
+                let label = _.findWhere(this.props.groupLabels, {_id: labelId});
+                if(label != null) {
+                    subjectLabels.push(label);
+                }
             });
             return (
                 <div className="ui divided selection list">
