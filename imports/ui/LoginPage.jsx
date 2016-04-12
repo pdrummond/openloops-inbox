@@ -26,7 +26,7 @@ export default class LoginPage extends React.Component {
                 if (err) {
                     this.setState({errorMessage: err.reason });
                 } else {
-                    FlowRouter.go('/home/open');
+                    FlowRouter.go('/home/inbox');
                 }
             });
         }

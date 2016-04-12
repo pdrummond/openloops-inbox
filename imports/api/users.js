@@ -8,6 +8,7 @@ if(Meteor.isServer) {
     Meteor.publish("userData", function () {
         return Meteor.users.find({}, {fields: {
             "username": 1,
+            "groupId": 1,
             "profileImage": 1
         }});
     });

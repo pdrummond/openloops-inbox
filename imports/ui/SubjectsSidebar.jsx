@@ -15,6 +15,10 @@ export default class SubjectsSidebar extends Component {
     render() {
         return (
             <div className="ui vertical menu" style={{position:'fixed', width: '235px', left:'10px', top: '55px', margin:'30px 10px', height:'calc(100% - 105px)'}}>
+                <a href="/home/inbox" className={this.props.homeSection=='inbox' ? "teal item active" : "teal item"}>
+                    Inbox
+                    {/*<div className="ui teal pointing left label">1</div>*/}
+                </a>
                 <a href="/home/open" className={this.props.homeSection=='open' ? "teal item active" : "teal item"}>
                     Open
                     {/*<div className="ui teal pointing left label">1</div>*/}

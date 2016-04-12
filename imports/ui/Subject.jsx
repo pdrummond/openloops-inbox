@@ -37,10 +37,11 @@ export default class Subject extends Component {
                         <strong>{this.props.subject.text}</strong>
                         <p style={{marginLeft:'40px'}}>
                             {this.renderToField()}
-                            <span>
+                            <span style={{marginLeft:'10px'}}>
                                 {this.renderLabels()}
                             </span>
                         </p>
+
                     </span>
                 </a>
             </li>
@@ -67,7 +68,7 @@ export default class Subject extends Component {
 
             return subjectLabels.map((label) => {
                 return (
-                    <div key={label._id} className="ui mini label" style={{backgroundColor: label.color, color:'white'}}>{label.text}</div>
+                    <span key={label._id} className="ui mini label" style={{backgroundColor: label.color, color:'white'}}>{label.text}</span>
                 );
             });
         }

@@ -25,6 +25,7 @@ class MessageList extends Component {
 
     componentDidUpdate() {
         var self = this;
+        $("#public-card").popup();
         $('.ui.dropdown').dropdown('refresh');
         $('.status-dropdown').dropdown('set selected', self.props.currentSubject.status);
         $('.status-dropdown').dropdown({
@@ -145,9 +146,17 @@ class MessageList extends Component {
                                 </select>
 
                                 <h5 className="ui disabled header">
-                                    <span><i className="ui users icon"></i> PARTICIPANTS</span>
+                                    <span><i className="ui users icon"></i> WHO CAN SEE THIS?</span>
                                 </h5>
                                 <div className="ui vertical segment">
+                                    <div id="public-card" className="ui card" data-content="This is a public group which means anyone - even users without an account - can see this and it can appear in search engines too.">
+                                        <div className="content">
+                                            <i className="right floated big purple world icon"></i>
+                                            <div className="content">
+                                                <strong>The Public</strong>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div className="ui card">
                                         <div className="content">
                                             <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar/small/elliot.jpg"/>

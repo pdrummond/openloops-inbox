@@ -80,7 +80,7 @@ class SubjectList extends Component {
                             </div>
                         </div>*/}
                     </div>
-                    <div className="item-list subject-list ui segment" style={{height: Meteor.userId() ? 'calc(100% - 340px)':'calc(100% - 183px)'}}>
+                    <div className="item-list subject-list ui segment" style={{height: Meteor.userId() ? 'calc(100% - 355px)':'calc(100% - 183px)'}}>
                         <ul>
                             {this.renderSubjects()}
                         </ul>
@@ -198,11 +198,16 @@ export default createContainer(() => {
     switch(homeSection) {
         case 'open': selector.status = 'open'; break;
         case 'closed': selector.status = 'closed'; break;
+        case 'inbox':
+            console.log("USER: " + JSON.stringify(Meteor.user()));
+            selector.$or = [{assignee: Meteor.user().username}, {groupId:Meteor.user().groupId}];
+            break;
     }
     if(groupFilterId != null) {
         selector.groupId = groupFilterId;
         selector.status = 'open';
     }
+
     data.subjects = Subjects.find(selector, { sort: { updatedAt: -1 } }).fetch();
     console.log("SubjectList loading " + data.loading + ", subjects: " + JSON.stringify(data.subjects));
 

@@ -20,7 +20,7 @@ class MainLayout extends Component {
                         <div className="item">
                             <img src="/images/loopy.png"/>
                         </div>
-                        <a href="/home/open" className="item active">< i className="ui home icon"></i> Home</a>
+                        <a href="/home/inbox" className="item active">< i className="ui home icon"></i> Home</a>
                         <a href="/explore" className="item"><i className = "ui compass icon"></i> Explore</a>
                         <div className="right menu">
                             {this.renderUserButtons()}
