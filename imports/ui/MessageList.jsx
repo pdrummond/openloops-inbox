@@ -144,7 +144,21 @@ class MessageList extends Component {
                                     <option value="open">Open</option>
                                     <option value="closed">Closed</option>
                                 </select>
-
+                                <div  style={{position:'relative', marginTop:'30px'}}>
+                                    <h5 className="ui disabled header">
+                                        <span><i className="ui user icon"></i> ASSIGNEE</span>
+                                        </h5>
+                                        <span className="ui icon right pointing inline dropdown" style={{position:'absolute', top:'0px', right:'0px'}}>
+                                            <i className="cogs grey icon"  style={{fontSize:'1em'}}></i>
+                                            <div className="menu">
+                                                <div className="item" onClick={this.handleSetAssigneeClicked.bind(this)}>Set Assignee</div>
+                                                <div className="item" onClick={this.handleAssignToMeClicked.bind(this)}>Assign to Me</div>
+                                                <div className="divider"></div>
+                                                <div className="item" onClick={this.handleRemoveAssigneeClicked.bind(this)}>Remove Assignee</div>
+                                            </div>
+                                        </span>
+                                        {this.renderAssigneeCard()}
+                                    </div>
                                 <h5 className="ui disabled header">
                                     <span><i className="ui users icon"></i> WHO CAN SEE THIS?</span>
                                 </h5>
@@ -196,6 +210,42 @@ class MessageList extends Component {
                                 </div>
 
                             </div>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
+        handleAssignToMeClicked() {
+            Meteor.call('subjects.updateAssignee', this.props.currentSubject._id, Meteor.user().username);
+        }
+
+        handleRemoveAssigneeClicked() {
+            Meteor.call('subjects.removeAssignee', this.props.currentSubject._id);
+        }
+
+        handleSetAssigneeClicked() {
+            let assignee = prompt("Enter assignee username:");
+            if(assignee && assignee.trim().length > 0) {
+                assignee = assignee.trim();
+                Meteor.call('subjects.updateAssignee', this.props.currentSubject._id, assignee);
+            }
+        }
+
+        renderAssigneeCard() {
+            if(this.props.currentSubject.assignee && this.props.currentSubject.assignee.length > 0) {
+                return (
+                    <div className="ui card">
+                        <div className="content">
+                                <strong>{this.props.currentSubject.assignee}</strong>
+                        </div>
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="ui card">
+                        <div className="content">
+                            Noone is assigned
                         </div>
                     </div>
                 );

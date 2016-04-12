@@ -129,6 +129,27 @@ Meteor.methods({
         Subjects.update(subjectId, { $set: { type } });
     },
 
+    'subjects.updateAssignee'(subjectId, assignee) {
+        check(subjectId, String);
+        check(assignee, String);
+
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
+        Subjects.update(subjectId, { $set: { assignee } });
+    },
+
+    'subjects.removeAssignee'(subjectId) {
+        check(subjectId, String);
+
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
+        Subjects.update(subjectId, {$unset: { assignee : "" }});
+    },
+
     'subjects.toggleLabel'(subjectId, labelId) {
         check(subjectId, String);
         check(labelId, String);
