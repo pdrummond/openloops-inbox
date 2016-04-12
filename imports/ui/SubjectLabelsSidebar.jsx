@@ -41,22 +41,7 @@ export default class SubjectLabelsSidebar extends Component {
                 </span>
                 <div className="ui segment">
                     {this.renderSubjectLabels()}
-                </div>
-            <h5 className="ui disabled header">
-                <span><i className="ui user icon"></i> ASSIGNEE</span>
-            </h5>
-            <div className="ui card">
-                <div className="content">
-                    <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar/small/elliot.jpg"/>
-                    <div className="header">
-                        Paul Drummond
-                    </div>
-                    <div className="meta">
-                        Developer
-                    </div>
-
-                </div>
-            </div>
+                </div>            
         </div>
     );
     }

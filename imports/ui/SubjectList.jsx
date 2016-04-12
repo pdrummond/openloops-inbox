@@ -196,7 +196,7 @@ export default createContainer(() => {
     };
     let selector = {};
     switch(homeSection) {
-        case 'inbox': selector.status = 'open'; break;
+        case 'open': selector.status = 'open'; break;
         case 'closed': selector.status = 'closed'; break;
     }
     if(groupFilterId != null) {

@@ -60,7 +60,7 @@ class MessageList extends Component {
                 <div className="container message-list" style={{marginLeft:'10px'}}>
                     <header>
                         <h1>
-                            <i className={Subjects.helpers.getSubjectTypeIconClassName(this.props.currentSubject.type)}></i> {this.props.currentSubject.text}
+                            <i className={Subjects.helpers.getSubjectTypeIconClassName(this.props.currentSubject.type)} style={{fontSize:'2em', position:'relative', top:'7px', color: Subjects.helpers.getSubjectTypeIconColor(this.props.currentSubject.type)}}></i> {this.props.currentSubject.text}
                             </h1>
                             <p >
                                 {this.renderStatusButton()} <span style={{color:'gray'}}>From <strong>{this.props.currentSubject.username}</strong> to <strong>{this.renderToLabel()}</strong> {moment(this.props.currentSubject.createdAt).fromNow()}</span>

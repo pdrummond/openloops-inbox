@@ -19,7 +19,7 @@ export default class Subject extends Component {
         const subjectClassName = this.props.subject.status == 'closed' ? 'checked' : '';
 
         return (
-            <li className={subjectClassName}>
+            <li  id="subject-item" className={subjectClassName}>
                 <button className="delete" onClick={this.deleteThisSubject.bind(this)}>
                     &times;
                 </button>
@@ -30,15 +30,19 @@ export default class Subject extends Component {
                     checked={this.props.subject.status == 'closed'}
                     onClick={this.toggleChecked.bind(this)}
                     />
-                <i className={Subjects.helpers.getSubjectTypeIconClassName(this.props.subject.type)} style={{marginLeft:'20px', color:'gray', fontSize:'16px'}}></i>
+                <i className={Subjects.helpers.getSubjectTypeIconClassName(this.props.subject.type)} style={{marginLeft:'10px', color:Subjects.helpers.getSubjectTypeIconColor(this.props.subject.type), fontSize:'16px'}}></i>
 
-                <a href={`/subject/${this.props.subject._id}`}><span className="text">
-                    <strong>{this.props.subject.text}</strong>
-                    {this.renderToField()}
-                    <span style={{marginLeft:'10px'}}>
-                        {this.renderLabels()}
+                <a href={`/subject/${this.props.subject._id}`}>
+                    <span className="text">
+                        <strong>{this.props.subject.text}</strong>
+                        <p style={{marginLeft:'40px'}}>
+                            {this.renderToField()}
+                            <span>
+                                {this.renderLabels()}
+                            </span>
+                        </p>
                     </span>
-                </span></a>
+                </a>
             </li>
         );
     }
@@ -59,7 +63,7 @@ export default class Subject extends Component {
                 if(label != null) {
                     subjectLabels.push(label);
                 }
-            });            
+            });
 
             return subjectLabels.map((label) => {
                 return (

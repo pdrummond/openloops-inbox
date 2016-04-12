@@ -86,7 +86,7 @@ ul {
 }
 
 .item-list li a {
-    color: #6F6F6F;
+    color: black;
     text-decoration: none;
 }
 
@@ -101,11 +101,11 @@ ul {
 
 
 .item-list li a:hover {
-    color: black;
+    color: #4183c4;
 }
 
 .item-list li .text {
-  margin-left: 10px;
+  margin-left: 0px;
 }
 
 .item-list li.checked {
@@ -233,4 +233,8 @@ header .hide-completed {
     top: 145px;
     height: calc(100% - 180px);
     overflow:auto;
+}
+
+#subject-item:hover {
+    background-color:whitesmoke;
 }

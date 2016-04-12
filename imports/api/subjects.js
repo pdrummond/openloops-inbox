@@ -188,5 +188,27 @@ Subjects.helpers = {
 
         }
         return "icon " + typeClassName;
+    },
+
+    getSubjectTypeIconColor(type) {
+        let color = 'black';
+        switch(type) {
+            case 'discussion': color = '#026AA7'; break;
+            case 'story': color = '#00BCD4'; break;
+            case 'journal': color = '#375BC8'; break;
+
+            case 'task': color = '#8BC34A'; break;
+            case 'feature': color = '#9C27B0'; break;
+            case 'problem': color = '#EB0000'; break;
+            case 'bug': color = '#FF5722'; break;
+
+            case 'question': color = '#A89B2F'; break;
+            case 'idea': color = '#795548'; break;
+
+            case 'announcement': color = '#AC2AAC'; break;
+
+            case 'channel': color = 'black'; break;
+        }
+        return color;
     }
 }
