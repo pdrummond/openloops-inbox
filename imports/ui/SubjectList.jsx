@@ -57,25 +57,26 @@ class SubjectList extends Component {
                     <SubjectsSidebar homeSection={this.props.homeSection} groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>
                     <div>
                         <div className="ui secondary menu">
-                            <a href={this.props.groupFilterId?`/home/group/${this.props.groupFilterId}`:''} className={this.props.labelFilterId?"header item":"active header item"} style={{padding:'0px'}}>
+                            <a href={this.props.groupFilterId?`/home/group/${this.props.groupFilterId}`:''} className="header item" style={{padding:'0px'}}>
                                 {this.renderHeader()}
                                 <span style={{color:'lightgray', position:'relative', top:'-2px', fontSize:'14px'}}>{this.props.subjects.length} subjects</span>
                             </a>
                             <div className="right menu">
-                                <div className="ui dropdown item">
-                                    {this.props.labelFilterId ?
-                                        <span>
-                                            <i className="tag icon" style={{color: this.props.currentLabel.color}}></i> {this.props.currentLabel.text}
-                                        </span> : <span>Filter by Label</span>} <i className="dropdown icon"></i>
-                                    <div className="menu">
-                                        <a href={`/home/group/${this.props.currentGroup._id}`} key={0} className="item">
-                                            <i className="remove icon"></i> Clear filter
-                                        </a>
-                                        <div className="divider"></div>
-                                        <div className="header">Labels</div>
-                                        {this.renderLabelItems()}
-                                    </div>
-                                </div>
+                                {this.props.groupFilterId && this.props.currentGroup.type == 'group' ?
+                                    <div className="ui dropdown item">
+                                        {this.props.labelFilterId ?
+                                            <span>
+                                                <i className="tag icon" style={{color: this.props.currentLabel.color}}></i> {this.props.currentLabel.text}
+                                            </span> : <span>Filter by Label</span>} <i className="dropdown icon"></i>
+                                        <div className="menu">
+                                            <a href={`/home/group/${this.props.currentGroup._id}`} key={0} className="item">
+                                                <i className="remove icon"></i> Clear filter
+                                            </a>
+                                            <div className="divider"></div>
+                                            <div className="header">Labels</div>
+                                            {this.renderLabelItems()}
+                                        </div>
+                                    </div> : ""}
                                 {this.renderSettingsDropdown()}
                             </div>
                         </div>
