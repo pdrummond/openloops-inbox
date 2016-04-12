@@ -56,13 +56,26 @@ class SubjectList extends Component {
                     {this.renderSignUpMessage()}
                     <SubjectsSidebar homeSection={this.props.homeSection} groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>
                     <div>
-                        <div className="ui secondary pointing menu">
+                        <div className="ui secondary menu">
                             <a href={this.props.groupFilterId?`/home/group/${this.props.groupFilterId}`:''} className={this.props.labelFilterId?"header item":"active header item"} style={{padding:'0px'}}>
                                 {this.renderHeader()}
                                 <span style={{color:'lightgray', position:'relative', top:'-2px', fontSize:'14px'}}>{this.props.subjects.length} subjects</span>
                             </a>
                             <div className="right menu">
-                                {this.renderFavouriteLabelItems()}
+                                <div className="ui dropdown item">
+                                    {this.props.labelFilterId ?
+                                        <span>
+                                            <i className="tag icon" style={{color: this.props.currentLabel.color}}></i> {this.props.currentLabel.text}
+                                        </span> : <span>Filter by Label</span>} <i className="dropdown icon"></i>
+                                    <div className="menu">
+                                        <a href={`/home/group/${this.props.currentGroup._id}`} key={0} className="item">
+                                            <i className="remove icon"></i> Clear filter
+                                        </a>
+                                        <div className="divider"></div>
+                                        <div className="header">Labels</div>
+                                        {this.renderLabelItems()}
+                                    </div>
+                                </div>
                                 {this.renderSettingsDropdown()}
                             </div>
                         </div>
@@ -91,10 +104,10 @@ class SubjectList extends Component {
         }
     }
 
-    renderFavouriteLabelItems() {
+    renderLabelItems() {
         return this.props.groupLabels.map((label) => {
             return (
-                <a href={`/home/group/${this.props.currentGroup._id}/label/${label._id}`} key={label._id} className={this.props.labelFilterId && this.props.labelFilterId == label._id?"ui active item":"ui item"}>
+                <a href={`/home/group/${this.props.currentGroup._id}/label/${label._id}`} data-value={label._id} key={label._id} className="item">
                     <i className="tag icon" style={{color: label.color}}></i> {label.text}
                 </a>
             );
@@ -132,7 +145,7 @@ class SubjectList extends Component {
     renderSettingsDropdown() {
         if(this.props.currentGroup && this.props.currentGroup.type == 'group') {
             return (
-                <div className="ui inline icon dropdown" style={{position:'relative', top:'5px', right:'0px'}}>
+                <div className="ui inline icon dropdown" style={{position:'relative', top:'5px', right:'2px'}}>
                     <i className="circular wrench icon"></i>
                     <div className="menu">
                         <div className="item" onClick={() => { FlowRouter.go(`/home/group/${this.props.currentGroup._id}/labels`)}}>Labels</div>
@@ -181,14 +194,21 @@ export default createContainer(() => {
     } else {
         currentGroupReady = true;
     }
+    let currentLabelReady = false;
+    if(labelFilterId != null) {
+        currentLabelReady = Meteor.subscribe('currentLabel', labelFilterId);
+    } else {
+        currentLabelReady = true;
+    }
     var groupsHandle = Meteor.subscribe('groups');
     var subjectsHandle = Meteor.subscribe('subjects', groupFilterId, labelFilterId);
     var labelsHandle = Meteor.subscribe('labels', groupFilterId);
     var data = {
-        loading: !(groupsHandle.ready() && subjectsHandle.ready() && currentGroupReady && labelsHandle.ready()),
+        loading: !(groupsHandle.ready() && subjectsHandle.ready() && currentGroupReady && currentLabelReady && labelsHandle.ready()),
         groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
         currentGroup: Groups.findOne(groupFilterId),
         groupLabels: Labels.find().fetch(),
+        currentLabel: Labels.findOne(labelFilterId),
         currentUser: Meteor.user(),
         homeSection,
         groupFilterId,

@@ -12,6 +12,10 @@ if (Meteor.isServer) {
         return Labels.find({groupId});
     });
 
+    Meteor.publish('currentLabel', function(labelId) {
+        return Labels.find({_id:labelId});
+    });
+
     Meteor.publish('subjectGroupLabels', function(subjectId) {
         var subject = Subjects.findOne(subjectId);
         var group = Groups.findOne(subject.groupId);
