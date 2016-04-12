@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Groups } from '../api/groups.js';
 import { Subjects } from '../api/subjects.js';
@@ -62,21 +63,8 @@ class SubjectList extends Component {
                                 <span style={{color:'lightgray', position:'relative', top:'-2px', fontSize:'14px'}}>{this.props.subjects.length} subjects</span>
                             </a>
                             <div className="right menu">
-                                {this.props.groupFilterId && this.props.currentGroup.type == 'group' ?
-                                    <div className="ui dropdown item">
-                                        {this.props.labelFilterId ?
-                                            <span>
-                                                <i className="tag icon" style={{color: this.props.currentLabel.color}}></i> {this.props.currentLabel.text}
-                                            </span> : <span>Filter by Label</span>} <i className="dropdown icon"></i>
-                                        <div className="menu">
-                                            <a href={`/home/group/${this.props.currentGroup._id}`} key={0} className="item">
-                                                <i className="remove icon"></i> Clear filter
-                                            </a>
-                                            <div className="divider"></div>
-                                            <div className="header">Labels</div>
-                                            {this.renderLabelItems()}
-                                        </div>
-                                    </div> : ""}
+                                {this.renderTypeFilterDropdown()}
+                                {this.renderLabelFilterDropdown()}
                                 {this.renderSettingsDropdown()}
                             </div>
                         </div>
@@ -101,6 +89,68 @@ class SubjectList extends Component {
                     </div>
                     {this.renderMessageBox()}
                 </div>
+            );
+        }
+    }
+
+    renderTypeFilterDropdown() {
+        //if(this.props.groupFilterId && this.props.currentGroup.type == 'group') {
+            return (
+                <div className="ui dropdown item">
+                    {this.renderTypeDropdownSelectedItem()}
+                    <div className="menu">
+                        <div className="item" onClick={()=>{FlowRouter.setQueryParams({'type': null})}}><i className="remove icon"></i> Clear Type Filter</div>
+                        <div className="divider"></div>
+                        <div className="item" data-value="discussion" onClick={()=>FlowRouter.setQueryParams({'type': 'discussion'})}><i className="comments icon"></i> Discussion</div>
+                        <div className="item" data-value="story" onClick={()=>FlowRouter.setQueryParams({'type': 'story'})}><i className="newspaper icon"></i> Story</div>
+                        <div className="item" data-value="journal" onClick={()=>FlowRouter.setQueryParams({'type': 'journal'})}><i className="book icon"></i> Journal</div>
+                        <div className="divider"></div>
+                        <div className="item" data-value="task" onClick={()=>FlowRouter.setQueryParams({'type': 'task'})}><i className="warning circle icon"></i> Task</div>
+                        <div className="item" data-value="feature" onClick={()=>FlowRouter.setQueryParams({'type': 'feature'})}><i className="bullseye icon"></i> Feature</div>
+                        <div className="item" data-value="problem" onClick={()=>FlowRouter.setQueryParams({'type': 'problem'})}><i className="bomb icon"></i> Problem</div>
+                        <div className="item" data-value="bug" onClick={()=>FlowRouter.setQueryParams({'type': 'bug'})}><i className="bug icon"></i> Bug</div>
+                        <div className="divider"></div>
+                        <div className="item" data-value="question" onClick={()=>FlowRouter.setQueryParams({'type': 'question'})}><i className="help circle icon"></i> Question</div>
+                        <div className="item" data-value="idea" onClick={()=>FlowRouter.setQueryParams({'type': 'idea'})}><i className="lightning icon"></i> Idea</div>
+                        <div className="divider"></div>
+                        <div className="item" data-value="announcement" onClick={()=>FlowRouter.setQueryParams({'type': 'announcement'})}><i className="announcement icon"></i> Announcement</div>
+                        <div className="divider"></div>
+                        <div className="item" data-value="channel" onClick={()=>FlowRouter.setQueryParams({'type': 'channel'})}><i className="square icon"></i> Channel</div>
+                    </div>
+                </div>
+            );
+        //}
+    }
+
+    renderTypeDropdownSelectedItem() {
+        if(this.props.typeQueryParam == null) {
+            return (<span><i className="circle icon"></i> Filter by Type <i className="dropdown icon"></i></span>);
+        } else {
+            return (
+                <span><i className="comments icon"></i> {this.props.typeQueryParam} <i className="dropdown icon"></i></span>
+            );
+        }
+    }
+
+    renderLabelFilterDropdown() {
+        if(this.props.groupFilterId && this.props.currentGroup.type == 'group') {
+            return (
+                    <div className="ui dropdown item">
+                        {this.props.labelFilterId ?
+                            <span>
+                                <i className="tag icon" style={{color: this.props.currentLabel.color}}></i> {this.props.currentLabel.text}
+                                </span>
+
+                    : <span><i className="tag icon"></i> Filter by Label</span>} <i className="dropdown icon"></i>
+                    <div className="menu">
+                        <a href={`/home/group/${this.props.currentGroup._id}`} key={0} className="item">
+                            <i className="remove icon"></i> Clear Label Filter
+                            </a>
+                            <div className="divider"></div>
+                            <div className="header">Labels</div>
+                            {this.renderLabelItems()}
+                        </div>
+                    </div>
             );
         }
     }
@@ -185,6 +235,7 @@ export default createContainer(() => {
     const homeSection = FlowRouter.getParam('homeSection');
     const groupFilterId = FlowRouter.getParam('groupFilterId');
     const labelFilterId = FlowRouter.getParam('labelFilterId');
+    const typeQueryParam = FlowRouter.getQueryParam('type');
     let currentGroupReady = false;
     if(groupFilterId != null) {
         /*
@@ -213,7 +264,8 @@ export default createContainer(() => {
         currentUser: Meteor.user(),
         homeSection,
         groupFilterId,
-        labelFilterId
+        labelFilterId,
+        typeQueryParam
     };
     let selector = {};
     switch(homeSection) {
@@ -227,6 +279,9 @@ export default createContainer(() => {
     if(groupFilterId != null) {
         selector.groupId = groupFilterId;
         selector.status = 'open';
+    }
+    if(typeQueryParam != null) {
+        selector.type = typeQueryParam;
     }
 
     data.subjects = Subjects.find(selector, { sort: { updatedAt: -1 } }).fetch();
