@@ -4,10 +4,12 @@ import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Groups } from '../api/groups.js';
+import { GroupMembers } from '../api/group-members.js';
 import { Subjects } from '../api/subjects.js';
 import { Messages } from '../api/messages.js';
 import { Labels } from '../api/labels.js';
 
+import SubjectGroupMembersSidebar from './SubjectGroupMembersSidebar.jsx';
 import SubjectLabelsSidebar from './SubjectLabelsSidebar.jsx';
 import CommentMessageBox from './CommentMessageBox.jsx';
 import Message from './Message.jsx';
@@ -25,7 +27,7 @@ class MessageList extends Component {
 
     componentDidUpdate() {
         var self = this;
-        $("#public-card").popup();
+        $("#public-notice").popup();
         $('.ui.dropdown').dropdown('refresh');
         $('.status-dropdown').dropdown('set selected', self.props.currentSubject.status);
         $('.status-dropdown').dropdown({
@@ -118,7 +120,11 @@ class MessageList extends Component {
                             </ul>
                             {this.renderMessageBox()}
                         </div>
+
                         <div className="subject-right-sidebar ui segment">
+                                <div id="public-notice" style={{cursor:'default'}} className="ui top attached label" data-content="This subject belongs to a public group which means anyone - even users without an account - can see all these messages and they can appear in search engines too.">
+                                    <i className="world icon"></i> This subject belongs to a public group
+                                </div>
                                 <SubjectLabelsSidebar currentSubject={this.props.currentSubject} groupLabels={this.props.groupLabels}/>
                                 <h5 className="ui disabled header">
                                     <span><i className="ui circle icon"></i> TYPE</span>
@@ -160,54 +166,9 @@ class MessageList extends Component {
                                         {this.renderAssigneeCard()}
                                     </div>
                                 <h5 className="ui disabled header">
-                                    <span><i className="ui users icon"></i> WHO CAN SEE THIS?</span>
+                                    <span><i className="ui users icon"></i> MEMBERS</span>
                                 </h5>
-                                <div className="ui vertical segment">
-                                    <div id="public-card" className="ui card" data-content="This is a public group which means anyone - even users without an account - can see this and it can appear in search engines too.">
-                                        <div className="content">
-                                            <i className="right floated big purple world icon"></i>
-                                            <div className="content">
-                                                <strong>The Public</strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="ui card">
-                                        <div className="content">
-                                            <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar/small/elliot.jpg"/>
-                                            <div className="content">
-                                                <strong>Paul Drummond</strong>
-                                            </div>
-                                            <div className="meta">
-                                                <i className="green circle icon"></i>
-                                                Online, here
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="ui card">
-                                        <div className="content">
-                                            <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar/large/jenny.jpg"/>
-                                            <div className="content">
-                                                <strong>Jenny Hess</strong>
-                                            </div>
-                                            <div className="meta">
-                                                <i className="orange circle icon"></i>
-                                                Online, elsewhere
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="ui card">
-                                        <div className="content">
-                                            <img className="right floated mini ui image" src="http://semantic-ui.com/images/avatar2/large/matthew.png"/>
-                                            <div className="content">
-                                                <strong>Matt Giampietro</strong>
-                                            </div>
-                                            <div className="meta">
-                                                <i className="red circle icon"></i>
-                                                Offline
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <SubjectGroupMembersSidebar groupMembers={this.props.groupMembers}/>
 
                             </div>
                         </div>
@@ -333,6 +294,7 @@ class MessageList extends Component {
         var subjectHandle = Meteor.subscribe('currentSubject', subjectId);
         var userDataHandle = Meteor.subscribe('userData');
         var labelsHandle = Meteor.subscribe('subjectGroupLabels', subjectId);
+        var groupMembers = Meteor.subscribe('subjectGroupMembers', subjectId)
         return {
             loading: !(groupsHandle.ready() && messagesHandle.ready() && subjectHandle.ready() && userDataHandle.ready() && labelsHandle),
             groups: Groups.find({}, { sort: { createdAt: 1 } }).fetch(),
@@ -340,6 +302,7 @@ class MessageList extends Component {
             incompleteCount: Messages.find({ checked: { $ne: true } }).count(),
             currentUser: Meteor.user(),
             currentSubject: Subjects.findOne(subjectId),
-            groupLabels: Labels.find().fetch()
+            groupLabels: Labels.find().fetch(),
+            groupMembers: GroupMembers.find().fetch()
         };
     }, MessageList);

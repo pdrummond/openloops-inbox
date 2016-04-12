@@ -2,15 +2,24 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
+import { Groups } from './groups.js';
+import { Subjects } from './subjects.js';
+
 export const GroupMembers = new Mongo.Collection('GroupMembers');
 
 if (Meteor.isServer) {
-    Meteor.publish('group-members', function(groupId) {
+    Meteor.publish('groupMembers', function(groupId) {
         return GroupMembers.find({groupId});
     });
 
     Meteor.publish('currentUserGroupMembers', function() {
         return GroupMembers.find({userId: this.userId});
+    });
+
+    Meteor.publish('subjectGroupMembers', function(subjectId) {
+        var subject = Subjects.findOne(subjectId);
+        var group = Groups.findOne(subject.groupId);
+        return GroupMembers.find({groupId: group._id});
     });
 }
 
