@@ -46,13 +46,18 @@ class MessageList extends Component {
     }
 
     renderMessages() {
-        let filteredMessages = this.props.messages;
-        if (this.state.hideCompleted) {
-            filteredMessages = filteredMessages.filter(message => !message.checked);
+        if(this.props.messages.length > 0) {
+            return this.props.messages.map((message) => (
+                <Message key={message._id} message={message} />
+            ));
+        } else {
+            return (
+                <h2 className="ui center aligned icon disabled header" style={{marginTop:'20px'}}>
+                    <i className="circular comments outline icon"></i>
+                    This subject doesn't have any content yet.  Be the first to add a message.
+                </h2>
+            );
         }
-        return filteredMessages.map((message) => (
-            <Message key={message._id} message={message} />
-        ));
     }
 
     render() {
