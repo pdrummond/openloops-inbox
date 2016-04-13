@@ -273,6 +273,7 @@ export default createContainer(() => {
         case 'closed': selector.status = 'closed'; break;
         case 'inbox':
             console.log("USER: " + JSON.stringify(Meteor.user()));
+            selector.status = 'open';
             selector.$or = [{assignee: Meteor.user().username}, {groupId:Meteor.user().groupId}];
             break;
     }

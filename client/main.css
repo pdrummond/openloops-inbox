@@ -218,7 +218,6 @@ header .hide-completed {
 
 .message-list {
     height:calc(100% - 75px);
-
 }
 
 #react-root .main-content .group-list li {
@@ -237,4 +236,8 @@ header .hide-completed {
 
 #subject-item:hover {
     background-color:whitesmoke;
+}
+
+#react-root .ui.feed>.event>.content .extra.text {
+    max-width: none;
 }
