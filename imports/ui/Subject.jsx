@@ -37,7 +37,8 @@ export default class Subject extends Component {
                         <strong>{this.props.subject.text}</strong>
                         <p style={{marginLeft:'40px'}}>
                             {this.renderToField()}
-                            <span style={{marginLeft:'10px'}}>
+                            {this.renderAssignee()}
+                            <span style={{marginLeft:'10px', position:'relative', top:'-3px'}}>
                                 {this.renderLabels()}
                             </span>
                         </p>
@@ -46,6 +47,19 @@ export default class Subject extends Component {
                 </a>
             </li>
         );
+    }
+
+    renderAssignee() {
+        if(this.props.subject.assignee && this.props.subject.assignee.length > 0) {
+            var assigneeUser = Meteor.users.findOne({username: this.props.subject.assignee});
+            return (
+                <span style={{marginLeft:'3px'}} title={"This subject is assigned to " + this.props.subject.assignee} >
+                    <span style={{fontSize: '12px', color:'#B0B0B0'}}> ● </span>
+                    <img className="ui avatar image" src={assigneeUser.profileImage} style={{marginLeft:'5px', width:'1em', height:'1em'}}/>
+                        <span style={{fontSize: '12px', color:'#B0B0B0'}}><strong>{this.props.subject.assignee}</strong></span>
+                </span>
+            );
+        }
     }
 
     renderToField() {
