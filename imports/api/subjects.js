@@ -107,6 +107,17 @@ Meteor.methods({
         Subjects.remove(subjectId);
     },
 
+    'subjects.updateTitle'(subjectId, text) {
+        check(subjectId, String);
+        check(text, String);
+
+        if (! Meteor.userId()) {
+            throw new Meteor.Error('not-authenticated');
+        }
+
+        Subjects.update(subjectId, { $set: { text } });
+    },
+
     'subjects.updateStatus'(subjectId, status) {
         check(subjectId, String);
         check(status, String);

@@ -66,13 +66,18 @@ class MessageList extends Component {
         } else {
             return (
                 <div className="container message-list" style={{marginLeft:'10px'}}>
-                    <header>
+                    <header style={{position:'relative'}}>
                         <h1>
                             <i className={Subjects.helpers.getSubjectTypeIconClassName(this.props.currentSubject.type)} style={{fontSize:'2em', position:'relative', top:'7px', color: Subjects.helpers.getSubjectTypeIconColor(this.props.currentSubject.type)}}></i> {this.props.currentSubject.text}
                             </h1>
                             <p >
                                 {this.renderStatusButton()} <span style={{color:'gray'}}>From <strong>{this.props.currentSubject.username}</strong> to <strong>{this.renderToLabel()}</strong> {moment(this.props.currentSubject.createdAt).fromNow()}</span>
                         </p>
+                        <div className="ui buttons" style={{position:'absolute', top:'20px', right: '0px'}}>
+                            <button className="ui button" onClick={this.handleEditSubjectClicked.bind(this)}><i className="edit icon"></i> Edit</button>
+                            <div className="or"></div>
+                            <button className="ui red button" onClick={this.handleDeleteSubjectClicked.bind(this)}><i className="remove icon"></i> Delete</button>
+                        </div>
                     </header>
 
                     <div style={{marginTop:'20px', paddingRight:'350px', height:'100%'}}>
@@ -195,6 +200,22 @@ class MessageList extends Component {
             if(assignee && assignee.trim().length > 0) {
                 assignee = assignee.trim();
                 Meteor.call('subjects.updateAssignee', this.props.currentSubject._id, assignee);
+            }
+        }
+
+        handleEditSubjectClicked() {
+            let text = prompt("Change subject title:", this.props.currentSubject.text);
+            if(text && text.trim().length > 0) {
+                text = text.trim();
+                Meteor.call('subjects.updateTitle', this.props.currentSubject._id, text);
+            }
+        }
+
+        handleDeleteSubjectClicked() {
+            var ok = confirm("Are you sure you want to delete this subject? This is a permanent action - the subject and all its content will be deleted forever.");
+            if (ok == true) {
+                Meteor.call('subjects.remove', this.props.currentSubject._id);
+                FlowRouter.go("/home/inbox");
             }
         }
 

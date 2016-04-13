@@ -229,8 +229,8 @@ header .hide-completed {
     position: fixed;
     right: 10px;
     width: 320px;
-    top: 160px;
-    height: calc(100% - 195px);
+    top: 162px;
+    height: calc(100% - 197px);
     overflow:auto;
 }
 
